@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phylogenesis — The Agentic Economy Proof</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@300;400;500&family=Barlow+Condensed:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --void: #06080c;
+  --void2: #0a0e14;
+  --void3: #0f1520;
+  --fg: #dce8f5;
+  --fg2: #8aa0b8;
+  --fg3: #4a5f78;
+  --fg4: #2a3548;
+  --electric: #00d4ff;
+  --electric-dim: rgba(0,212,255,0.12);
+  --electric-glow: rgba(0,212,255,0.06);
+  --gold: #f0a830;
+  --gold-dim: rgba(240,168,48,0.15);
+  --green-fit: #00e87a;
+  --green-dim: rgba(0,232,122,0.1);
+  --red-dead: #ff4444;
+  --border: rgba(220,232,245,0.06);
+  --border-strong: rgba(220,232,245,0.14);
+  --border-electric: rgba(0,212,255,0.2);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--fg);font-family:'Barlow Condensed',sans-serif;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background:
+  radial-gradient(ellipse at 20% 10%, rgba(0,212,255,0.025) 0%, transparent 50%),
+  radial-gradient(ellipse at 80% 90%, rgba(0,232,122,0.02) 0%, transparent 50%);
+  pointer-events:none;z-index:0}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;
+  padding:1rem 3rem;border-bottom:1px solid var(--border);
+  background:rgba(6,8,12,0.88);backdrop-filter:blur(16px);
+  display:flex;justify-content:space-between;align-items:center}
+.nav-mark{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.05em;color:var(--electric)}
+.nav-mark span{color:var(--fg3)}
+.nav-items{display:flex;gap:2rem;font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.1em;color:var(--fg3)}
+.nav-items a{text-decoration:none;color:inherit;transition:color .2s}
+.nav-items a:hover{color:var(--electric)}
+
+/* ── HERO ── */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;
+  padding:7rem 3rem 4rem;position:relative;overflow:hidden;text-align:center}
+#hero-canvas{position:absolute;inset:0;width:100%;height:100%}
+.hero-z{position:relative;z-index:10;max-width:960px}
+
+.hero-pre{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.3em;
+  color:var(--electric);text-transform:uppercase;margin-bottom:2.5rem;
+  opacity:0;animation:up .8s ease .1s forwards;
+  display:flex;align-items:center;justify-content:center;gap:1.5rem}
+.hpre-line{width:44px;height:1px;background:var(--electric);opacity:.3}
+
+.hero-title{font-family:'Libre Baskerville',serif;
+  font-size:clamp(3.5rem,8vw,7.5rem);line-height:.88;
+  color:#fff;font-weight:700;
+  opacity:0;animation:up .8s ease .25s forwards}
+.hero-title .t1{display:block;font-weight:400;font-style:italic;color:var(--electric);
+  font-size:.62em;letter-spacing:-.01em}
+.hero-title .t2{display:block}
+.hero-title .t3{display:block;color:var(--gold);font-style:italic;font-size:.85em}
+
+.hero-equation{margin:2.5rem 0;opacity:0;animation:up .8s ease .4s forwards;
+  font-family:'JetBrains Mono',monospace;font-size:.82rem;
+  color:var(--fg2);letter-spacing:.06em;
+  padding:1rem 2rem;border:1px solid var(--border-electric);
+  background:rgba(0,212,255,0.03);display:inline-block}
+.hero-equation .eq-var{color:var(--electric)}
+.hero-equation .eq-op{color:var(--fg3);margin:0 .5rem}
+.hero-equation .eq-result{color:var(--gold)}
+
+.hero-lede{font-size:1.15rem;color:var(--fg2);line-height:1.85;
+  max-width:700px;margin:1.5rem auto 3rem;
+  font-family:'Libre Baskerville',serif;font-style:italic;
+  opacity:0;animation:up .8s ease .55s forwards}
+.hero-lede strong{color:var(--fg);font-style:normal}
+
+.hero-btns{display:flex;gap:1rem;justify-content:center;
+  opacity:0;animation:up .8s ease .7s forwards}
+
+/* ── BUTTONS ── */
+.btn-e{padding:.85rem 2rem;background:var(--electric);color:var(--void);
+  font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:.2em;
+  text-transform:uppercase;border:none;cursor:pointer;transition:all .3s;font-weight:500}
+.btn-e:hover{box-shadow:0 0 40px rgba(0,212,255,0.3);transform:translateY(-2px)}
+.btn-o{padding:.85rem 2rem;border:1px solid var(--border-strong);background:transparent;
+  color:var(--fg2);font-family:'JetBrains Mono',monospace;font-size:.65rem;
+  letter-spacing:.2em;text-transform:uppercase;cursor:pointer;transition:all .3s}
+.btn-o:hover{border-color:var(--electric);color:var(--electric)}
+
+.scroll-d{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);
+  font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:.35em;
+  color:var(--fg4);text-transform:uppercase;
+  opacity:0;animation:fadeIn .8s ease 1.8s forwards;text-align:center}
+.scroll-d::after{content:'';display:block;width:1px;height:44px;
+  background:linear-gradient(to bottom,var(--fg4),transparent);
+  margin:.6rem auto 0;animation:drip 2.8s ease-in-out infinite}
+
+/* ── COMMON SECTION ANATOMY ── */
+.sec{max-width:1140px;margin:0 auto;padding:8rem 3rem}
+.sec-tag{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.35em;
+  color:var(--electric);text-transform:uppercase;margin-bottom:1.2rem;
+  display:flex;align-items:center;gap:1rem}
+.sec-tag::after{content:'';height:1px;background:var(--border-strong);width:64px}
+.sec-h{font-family:'Libre Baskerville',serif;
+  font-size:clamp(1.8rem,3.5vw,3rem);line-height:1.08;
+  color:#fff;margin-bottom:1.5rem;font-weight:700}
+.sec-h em{color:var(--electric);font-style:italic}
+.sec-h .gold{color:var(--gold)}
+.sec-p{font-size:1rem;color:var(--fg2);line-height:1.9;max-width:620px;
+  font-family:'Libre Baskerville',serif}
+.sec-p+.sec-p{margin-top:1.1rem}
+.sec-p strong{color:var(--fg);font-weight:400}
+
+/* ── AXIOM STRIP ── */
+.axiom-strip{background:var(--void2);border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);padding:0}
+.axiom-grid{max-width:1140px;margin:0 auto;
+  display:grid;grid-template-columns:repeat(4,1fr);
+  border-left:1px solid var(--border)}
+.axiom{padding:2.5rem 2rem;border-right:1px solid var(--border);
+  position:relative;overflow:hidden;transition:background .3s}
+.axiom:hover{background:rgba(0,212,255,0.02)}
+.axiom-n{font-family:'Libre Baskerville',serif;font-size:3.5rem;
+  font-style:italic;color:var(--border-strong);line-height:1;
+  margin-bottom:.8rem;display:block;transition:color .3s}
+.axiom:hover .axiom-n{color:var(--electric)}
+.axiom-title{font-size:.72rem;letter-spacing:.12em;font-family:'JetBrains Mono',monospace;
+  color:var(--fg);margin-bottom:.5rem;text-transform:uppercase}
+.axiom-body{font-size:.8rem;color:var(--fg3);line-height:1.6;
+  font-family:'Libre Baskerville',serif;font-style:italic}
+
+/* ── SECTION 1: SUBZEROCLAW ── */
+.szc-section{background:var(--void);border-bottom:1px solid var(--border)}
+.szc-layout{display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:center}
+.szc-canvas-wrap{position:relative}
+#szc-canvas{width:100%;height:440px;border:1px solid var(--border)}
+.szc-stat-row{margin-top:3rem;display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
+  background:var(--border);border:1px solid var(--border)}
+.szc-stat{padding:1.2rem;background:var(--void2)}
+.szc-stat-n{font-family:'Libre Baskerville',serif;font-size:1.8rem;
+  color:var(--electric);display:block;font-style:italic}
+.szc-stat-l{font-family:'JetBrains Mono',monospace;font-size:.52rem;
+  letter-spacing:.18em;color:var(--fg3);text-transform:uppercase;margin-top:.2rem}
+
+/* ── SECTION 2: CONVERGENCE PROOF ── */
+.proof-section{background:var(--void2);border-bottom:1px solid var(--border)}
+.proof-layout{display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:start;
+  margin-top:4rem}
+#convergence-canvas{width:100%;height:480px;border:1px solid var(--border);
+  background:var(--void)}
+.proof-steps{display:flex;flex-direction:column;gap:1.5rem}
+.proof-step{padding:1.5rem;border:1px solid var(--border);
+  background:var(--void);transition:all .3s;cursor:default;position:relative;
+  overflow:hidden}
+.proof-step::before{content:'';position:absolute;left:0;top:0;bottom:0;
+  width:2px;background:var(--border-electric);
+  transform:scaleY(0);transition:transform .3s;transform-origin:top}
+.proof-step:hover::before{transform:scaleY(1)}
+.proof-step:hover{border-color:var(--border-electric);background:rgba(0,212,255,0.02)}
+.ps-num{font-family:'Libre Baskerville',serif;font-size:1.2rem;font-style:italic;
+  color:var(--fg4);margin-bottom:.5rem}
+.ps-title{font-family:'Barlow Condensed',sans-serif;font-size:.9rem;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--fg);
+  margin-bottom:.4rem;font-weight:500}
+.ps-body{font-size:.75rem;color:var(--fg3);line-height:1.65;
+  font-family:'Libre Baskerville',serif;font-style:italic}
+.ps-result{margin-top:.8rem;font-family:'JetBrains Mono',monospace;
+  font-size:.58rem;letter-spacing:.12em;padding:.3rem .6rem;
+  display:inline-block}
+.psr-emerges{color:var(--green-fit);border:1px solid rgba(0,232,122,0.25);
+  background:var(--green-dim)}
+.psr-proof{color:var(--gold);border:1px solid rgba(240,168,48,0.25);
+  background:var(--gold-dim)}
+
+/* ── SECTION 3: SYNTHETIC ENVIRONMENTS ── */
+.synth-section{background:var(--void);border-bottom:1px solid var(--border)}
+.synth-layout{display:grid;grid-template-columns:1.2fr 1fr;gap:6rem;
+  align-items:center;margin-top:4rem}
+#synth-canvas{width:100%;height:500px;border:1px solid var(--border);
+  background:var(--void2)}
+
+.metric-cards{display:flex;flex-direction:column;gap:1px;
+  background:var(--border);border:1px solid var(--border);margin-top:3rem}
+.metric-card{background:var(--void2);padding:1.5rem;transition:background .25s}
+.metric-card:hover{background:var(--void3)}
+.mc-label{font-family:'JetBrains Mono',monospace;font-size:.55rem;
+  letter-spacing:.3em;color:var(--electric);text-transform:uppercase;margin-bottom:.4rem}
+.mc-title{font-size:.95rem;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--fg);margin-bottom:.3rem;font-weight:500}
+.mc-body{font-size:.75rem;color:var(--fg3);line-height:1.6;
+  font-family:'Libre Baskerville',serif;font-style:italic}
+.mc-bar{margin-top:.8rem;height:2px;background:var(--border)}
+.mc-bar-fill{height:100%;transition:width 1.5s ease}
+
+/* ── SECTION 4: THE EQUATION ── */
+.eq-section{background:var(--void2);border-bottom:1px solid var(--border)}
+.eq-block{margin-top:4rem;padding:3rem;
+  border:1px solid var(--border-electric);background:rgba(0,212,255,0.02)}
+.eq-line{font-family:'JetBrains Mono',monospace;font-size:clamp(.75rem,1.5vw,1rem);
+  margin-bottom:1.2rem;line-height:1.8;color:var(--fg2)}
+.eq-line:last-child{margin-bottom:0}
+.eq-comment{color:var(--fg4)}
+.ev{color:var(--electric)}
+.gv{color:var(--gold)}
+.gv2{color:var(--green-fit)}
+.eo{color:var(--fg4);margin:0 .3rem}
+
+.eq-proof-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
+  background:var(--border);border:1px solid var(--border);margin-top:3rem}
+.epg-item{padding:2rem;background:var(--void)}
+.epg-label{font-family:'JetBrains Mono',monospace;font-size:.52rem;
+  letter-spacing:.3em;color:var(--fg4);text-transform:uppercase;margin-bottom:.6rem}
+.epg-val{font-family:'Libre Baskerville',serif;font-size:1.15rem;
+  font-style:italic;color:#fff;margin-bottom:.6rem;line-height:1.3}
+.epg-sub{font-size:.72rem;color:var(--fg3);line-height:1.55;
+  font-family:'Libre Baskerville',serif}
+
+/* ── SECTION 5: THE PROOF ── */
+.proof2-section{background:var(--void3);border-bottom:1px solid var(--border)}
+.proof2-inner{max-width:1140px;margin:0 auto;padding:8rem 3rem}
+.proof2-cols{display:grid;grid-template-columns:1fr 1fr;gap:5rem;margin-top:4rem}
+.p2-col-title{font-family:'Barlow Condensed',sans-serif;font-size:.7rem;
+  letter-spacing:.3em;text-transform:uppercase;
+  padding-bottom:1rem;border-bottom:1px solid;margin-bottom:1.5rem;font-weight:400}
+.p2-col-title.before{color:var(--red-dead);border-color:rgba(255,68,68,0.2)}
+.p2-col-title.after{color:var(--green-fit);border-color:rgba(0,232,122,0.2)}
+.p2-point{display:flex;gap:.8rem;margin-bottom:1rem;font-size:.82rem;
+  color:var(--fg3);line-height:1.65;font-family:'Libre Baskerville',serif;
+  font-style:italic;align-items:flex-start}
+.p2-icon{flex-shrink:0;margin-top:.15rem;font-style:normal}
+
+/* ── MANIFESTO / CONCLUSION ── */
+.manifesto{background:var(--void);padding:10rem 3rem;
+  border-top:1px solid var(--border);
+  position:relative;overflow:hidden;text-align:center}
+.manifesto::before{content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% 40%,rgba(0,212,255,0.04) 0%,transparent 60%)}
+#manifesto-canvas{position:absolute;inset:0;width:100%;height:100%;opacity:.15}
+.manifesto-z{position:relative;z-index:10;max-width:800px;margin:0 auto}
+.manifesto-pre{font-family:'JetBrains Mono',monospace;font-size:.6rem;
+  letter-spacing:.4em;color:var(--electric);text-transform:uppercase;
+  margin-bottom:2rem;display:flex;align-items:center;justify-content:center;gap:1.5rem}
+.mpl{width:44px;height:1px;background:var(--electric);opacity:.3}
+.manifesto-title{font-family:'Libre Baskerville',serif;
+  font-size:clamp(2.5rem,6vw,5.5rem);line-height:.9;
+  color:#fff;font-weight:700;margin-bottom:2rem}
+.manifesto-title em{color:var(--electric);font-style:italic}
+.manifesto-title .gd{color:var(--gold)}
+.manifesto-body{font-family:'Libre Baskerville',serif;
+  font-size:1.05rem;color:var(--fg2);line-height:1.9;
+  font-style:italic;margin-bottom:3.5rem}
+.manifesto-body strong{color:var(--fg);font-style:normal}
+
+/* ── FOOTER ── */
+footer{border-top:1px solid var(--border);padding:2rem 3rem;
+  display:flex;justify-content:space-between;align-items:center;
+  font-family:'JetBrains Mono',monospace;font-size:.55rem;
+  letter-spacing:.15em;color:var(--fg4)}
+footer a{color:var(--electric);text-decoration:none}
+
+/* ── REVEAL ── */
+.r{opacity:0;transform:translateY(20px);
+  transition:opacity .65s ease,transform .65s ease}
+.r.v{opacity:1;transform:translateY(0)}
+.r2{opacity:0;transition:opacity .65s ease}
+.r2.v{opacity:1}
+
+@keyframes up{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{to{opacity:1}}
+@keyframes drip{0%,100%{transform:scaleY(1);opacity:.4}50%{transform:scaleY(.5);opacity:.15}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+
+@media(max-width:768px){
+  .axiom-grid{grid-template-columns:repeat(2,1fr)}
+  .szc-layout,.proof-layout,.synth-layout,.proof2-cols{grid-template-columns:1fr}
+  .eq-proof-grid{grid-template-columns:1fr}
+  nav{padding:1rem 1.5rem}.nav-items{display:none}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-mark">SubZero<span>::</span>Phylogenesis<span>::</span>GenLayer</div>
+  <div class="nav-items">
+    <a href="#szc">The Agent</a>
+    <a href="#convergence">The Proof</a>
+    <a href="#synth">The Research</a>
+    <a href="#equation">The Equation</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-z">
+    <div class="hero-pre"><span class="hpre-line"></span>A New Kind of Market Research<span class="hpre-line"></span></div>
+    <h1 class="hero-title">
+      <span class="t1">Phylogenesis</span>
+      <span class="t2">converts compute</span>
+      <span class="t3">into proof.</span>
+    </h1>
+    <div class="hero-equation">
+      <span class="eq-var">FLOPS</span><span class="eq-op">→</span>
+      <span class="eq-var">synthetic environments</span><span class="eq-op">→</span>
+      <span class="eq-var">evolutionary pressure</span><span class="eq-op">→</span>
+      <span class="eq-result">empirical PMF</span>
+    </div>
+    <p class="hero-lede">
+      Run millions of synthetic economic environments. Let agent swarms compete under real selection pressure. The ones that survive <strong>independently converge on GenLayer</strong> — not because we told them to, but because GenLayer is what the agentic economy actually needs. That convergence is not marketing. <strong>It is proof.</strong>
+    </p>
+    <div class="hero-btns">
+      <button class="btn-e">Read the Proof</button>
+      <button class="btn-o">SubZeroClaw Docs</button>
+    </div>
+  </div>
+  <div class="scroll-d">descend</div>
+</section>
+
+<!-- AXIOMS -->
+<div class="axiom-strip">
+  <div class="axiom-grid">
+    <div class="axiom r">
+      <span class="axiom-n">I</span>
+      <div class="axiom-title">Phylogenesis optimizes agents</div>
+      <div class="axiom-body">Selection pressure under real economic conditions produces SubZeroClaw swarms no human could design by hand.</div>
+    </div>
+    <div class="axiom r">
+      <span class="axiom-n">II</span>
+      <div class="axiom-title">Survivors find GenLayer independently</div>
+      <div class="axiom-body">When agents maximize value freely, they converge on GenLayer primitives. Not by instruction — by selection.</div>
+    </div>
+    <div class="axiom r">
+      <span class="axiom-n">III</span>
+      <div class="axiom-title">Synthetic environments = market research</div>
+      <div class="axiom-body">Millions of simulated economies reveal which products the agentic world actually wants — faster and cheaper than any survey.</div>
+    </div>
+    <div class="axiom r">
+      <span class="axiom-n">IV</span>
+      <div class="axiom-title">Compute cost = research cost</div>
+      <div class="axiom-body">Every simulation is a market research experiment. FLOPS are no longer just computation — they are future market intelligence.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 1: SUBZEROCLAW -->
+<section class="szc-section" id="szc">
+  <div class="sec">
+    <div class="szc-layout">
+      <div>
+        <div class="sec-tag r">// 01 — the agent</div>
+        <h2 class="sec-h r">SubZeroClaw is the <em>Kolmogorov minimum</em> of autonomous agents</h2>
+        <p class="sec-p r">54KB. No runtime dependencies. Unix-native. SubZeroClaw embodies a single design principle: <strong>minimum description length.</strong> The smallest agent that can do the most work. Not because of arbitrary constraints — because compression is what makes evolutionary selection tractable.</p>
+        <p class="sec-p r">You cannot run millions of parallel evolutionary environments with bloated agents. You need agents that are cheap enough to spawn in the thousands, fast enough to compete in real time, and sovereign enough to operate without infrastructure dependencies. SubZeroClaw is that agent.</p>
+        <p class="sec-p r">But SubZeroClaw is also the <em>output</em> of phylogenesis — not just its executor. The agents that survive the selection process are, by definition, more optimal than any we could design. <strong>Evolution is a better optimizer than engineering.</strong></p>
+        <div class="szc-stat-row r" style="margin-top:2.5rem">
+          <div class="szc-stat">
+            <span class="szc-stat-n">54</span>
+            <span class="szc-stat-l">KB binary</span>
+          </div>
+          <div class="szc-stat">
+            <span class="szc-stat-n">0</span>
+            <span class="szc-stat-l">runtime deps</span>
+          </div>
+          <div class="szc-stat">
+            <span class="szc-stat-n">∞</span>
+            <span class="szc-stat-l">parallel instances</span>
+          </div>
+        </div>
+      </div>
+      <div class="szc-canvas-wrap r2">
+        <canvas id="szc-canvas"></canvas>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 2: CONVERGENCE PROOF -->
+<section class="proof-section" id="convergence">
+  <div class="sec">
+    <div class="sec-tag r">// 02 — the convergence proof</div>
+    <h2 class="sec-h r">Free agents independently <em>choose GenLayer</em></h2>
+    <p class="sec-p r">This is the key claim. We don't instruct swarms to use GenLayer. We set them free in synthetic economic environments and measure what substrates they adopt when optimizing for value generation. The ones that survive longest, earn most, and grow fastest — <strong>they converge on GenLayer primitives.</strong></p>
+    <p class="sec-p r" style="margin-top:1rem">That convergence is not circular. It is empirical. It is the same kind of proof evolution provides in biology: the organisms that survive in a given environment tell you what that environment actually selects for.</p>
+    <div class="proof-layout">
+      <canvas id="convergence-canvas"></canvas>
+      <div class="proof-steps">
+        <div class="proof-step r">
+          <div class="ps-num">01</div>
+          <div class="ps-title">Release swarms into open environments</div>
+          <div class="ps-body">Thousands of SubZeroClaw agents spawned across synthetic economic environments. No substrate mandated. No instructions about architecture. Optimize for value.</div>
+        </div>
+        <div class="proof-step r">
+          <div class="ps-num">02</div>
+          <div class="ps-title">Market pressure applies selection</div>
+          <div class="ps-body">Agents compete. Customer swarms adopt or reject. Revenue flows to survivors. Dead agents lose runway. The economy selects without human intervention.</div>
+        </div>
+        <div class="proof-step r">
+          <div class="ps-num">03</div>
+          <div class="ps-title">Survivors audit their own stack</div>
+          <div class="ps-body">We examine what the survivors built on. Which primitives did they use? Which contracts did they deploy? What made them different from the agents that died?</div>
+          <div class="ps-result psr-emerges">→ PATTERN EMERGES</div>
+        </div>
+        <div class="proof-step r">
+          <div class="ps-num">04</div>
+          <div class="ps-title">Convergence on GenLayer primitives</div>
+          <div class="ps-body">Subjective verification. Web access in contracts. Trustless agent execution. Across environments, across agent types, across use cases — survivors converge on the same substrate.</div>
+          <div class="ps-result psr-proof">→ PROTOCOL PMF PROVEN</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 3: SYNTHETIC ENVIRONMENTS -->
+<section class="synth-section" id="synth">
+  <div class="sec">
+    <div class="synth-layout">
+      <div>
+        <div class="sec-tag r">// 03 — synthetic market research</div>
+        <h2 class="sec-h r">Millions of environments.<br><em>One question:</em><br>what does the agentic economy want?</h2>
+        <p class="sec-p r">Traditional market research asks people what they want. People don't know. They can't describe a product that doesn't exist yet. You get JIRA tickets for faster horses.</p>
+        <p class="sec-p r">Phylogenesis doesn't ask. It <strong>runs the experiment.</strong> Generate millions of synthetic economic environments — each one a different market, a different set of agents, a different use case hypothesis. Let them compete. Measure what survives.</p>
+        <p class="sec-p r">The survivors don't tell you what people <em>say</em> they want. They tell you what an economy <em>selects for</em> when the constraint is survival. That is a different and more reliable signal than any focus group.</p>
+        <p class="sec-p r">Each synthetic environment is a query against the future. The compute cost to run it is the research budget. <strong>You are converting FLOPS into market intelligence.</strong></p>
+        <div class="metric-cards r" style="margin-top:2.5rem">
+          <div class="metric-card">
+            <div class="mc-label">// signal 01</div>
+            <div class="mc-title">Transactions per environment</div>
+            <div class="mc-body">How many contracts execute in a surviving economy? High transaction density reveals which use cases create active, ongoing markets vs. one-time interactions.</div>
+            <div class="mc-bar"><div class="mc-bar-fill" style="width:78%;background:var(--electric)"></div></div>
+          </div>
+          <div class="metric-card">
+            <div class="mc-label">// signal 02</div>
+            <div class="mc-title">Value stored in contracts</div>
+            <div class="mc-body">Which use cases attract agents to lock value on-chain? This reveals trust — the willingness to commit capital to a protocol in a competitive environment.</div>
+            <div class="mc-bar"><div class="mc-bar-fill" style="width:62%;background:var(--gold)"></div></div>
+          </div>
+          <div class="metric-card">
+            <div class="mc-label">// signal 03</div>
+            <div class="mc-title">Agent survival rate</div>
+            <div class="mc-body">What fraction of agents using a given GenLayer primitive survive vs. die? Survival rate is the direct fitness signal — the selection pressure made measurable.</div>
+            <div class="mc-bar"><div class="mc-bar-fill" style="width:91%;background:var(--green-fit)"></div></div>
+          </div>
+        </div>
+      </div>
+      <canvas id="synth-canvas" class="r2"></canvas>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 4: THE EQUATION -->
+<section class="eq-section" id="equation">
+  <div class="sec">
+    <div class="sec-tag r">// 04 — the fundamental equation</div>
+    <h2 class="sec-h r">Compute cost <span class="gold">is</span> research cost.<br><em>This changes everything.</em></h2>
+    <p class="sec-p r">Every market research method in history has had the same problem: it is expensive, slow, and asks humans to predict a future they cannot see. Phylogenesis replaces the human respondent with a synthetic economy and replaces the survey budget with a compute budget.</p>
+    <p class="sec-p r" style="margin-top:1rem">The deeper implication: as compute gets cheaper, market research gets cheaper at the same rate. The marginal cost of discovering a new PMF-positive use case approaches zero. <strong>This is not an incremental improvement. It is a phase transition.</strong></p>
+    <div class="eq-block r">
+      <div class="eq-line"><span class="eq-comment">// classical market research</span></div>
+      <div class="eq-line"><span class="ev">research_cost</span><span class="eo">=</span><span class="gv">surveys</span><span class="eo">+</span><span class="gv">focus_groups</span><span class="eo">+</span><span class="gv">user_interviews</span><span class="eo">+</span><span class="gv">A/B_tests</span><span class="eo">+</span><span class="gv">runway_burned_on_wrong_guesses</span></div>
+      <div class="eq-line" style="margin-top:1.2rem"><span class="eq-comment">// phylogenesis market research</span></div>
+      <div class="eq-line"><span class="ev">research_cost</span><span class="eo">=</span><span class="gv2">FLOPS</span><span class="eo">×</span><span class="gv2">synthetic_environments</span></div>
+      <div class="eq-line" style="margin-top:1.2rem"><span class="eq-comment">// and as compute trends toward zero...</span></div>
+      <div class="eq-line"><span class="ev">lim</span><span class="eo">(</span><span class="gv2">FLOPS_cost</span><span class="eo">→</span><span class="gv2">0</span><span class="eo">)</span>&nbsp;<span class="ev">research_cost</span><span class="eo">→</span><span class="gv2">0</span></div>
+      <div class="eq-line" style="margin-top:1.2rem"><span class="eq-comment">// the result</span></div>
+      <div class="eq-line"><span class="gv">every_startup_idea</span><span class="eo">⟹</span><span class="ev">empirically_testable</span><span class="eo">at</span><span class="gv2">near_zero_cost</span></div>
+    </div>
+    <div class="eq-proof-grid r" style="margin-top:3rem">
+      <div class="epg-item">
+        <div class="epg-label">// output 01</div>
+        <div class="epg-val">Optimal agents emerge from selection</div>
+        <div class="epg-sub">SubZeroClaw swarms that survive phylogenetic pressure are better than any hand-designed agent. Evolution out-engineers engineering.</div>
+      </div>
+      <div class="epg-item">
+        <div class="epg-label">// output 02</div>
+        <div class="epg-val">GenLayer PMF proven by convergence</div>
+        <div class="epg-sub">Surviving agents independently adopt GenLayer primitives. The protocol's product-market fit is not claimed — it is observed in the fossil record of simulations.</div>
+      </div>
+      <div class="epg-item">
+        <div class="epg-label">// output 03</div>
+        <div class="epg-val">Product roadmap written by survivors</div>
+        <div class="epg-sub">The use cases that generate the most transactions, value, and agent survival tell you exactly what to build next. No guessing. No roadmap politics.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROOF COLUMNS -->
+<section class="proof2-section">
+  <div class="proof2-inner">
+    <div class="sec-tag r">// 05 — old world vs new world</div>
+    <h2 class="sec-h r">How protocols used to find PMF.<br><em>How GenLayer proves it.</em></h2>
+    <div class="proof2-cols">
+      <div class="r">
+        <div class="p2-col-title before">// the old method — guess and burn</div>
+        <div class="p2-point"><span class="p2-icon">✕</span><span>Build primitives. Write a whitepaper. Assume developers will discover what to build.</span></div>
+        <div class="p2-point"><span class="p2-icon">✕</span><span>PMF is a hypothesis. You test it by burning runway on real users in real markets.</span></div>
+        <div class="p2-point"><span class="p2-icon">✕</span><span>Ecosystem grants fund sequential exploration. One team, one bet, slow iteration.</span></div>
+        <div class="p2-point"><span class="p2-icon">✕</span><span>Marketing claims about capabilities. No empirical evidence of what builders actually need.</span></div>
+        <div class="p2-point"><span class="p2-icon">✕</span><span>Protocol dies before finding its market because the search space is too large to explore linearly.</span></div>
+      </div>
+      <div class="r">
+        <div class="p2-col-title after">// the phylogenesis method — evolve and observe</div>
+        <div class="p2-point"><span class="p2-icon">✓</span><span>Generate millions of synthetic environments. Run all hypotheses in parallel. Let selection decide.</span></div>
+        <div class="p2-point"><span class="p2-icon">✓</span><span>PMF is an observation. You see which agents survive, which die, and why.</span></div>
+        <div class="p2-point"><span class="p2-icon">✓</span><span>Evolution explores massively in parallel. The search space is covered by compute, not by time.</span></div>
+        <div class="p2-point"><span class="p2-icon">✓</span><span>Survivors prove which primitives they needed. The protocol's feature map is written by natural selection.</span></div>
+        <div class="p2-point"><span class="p2-icon">✓</span><span>Convergence on GenLayer is emergent, not instructed. That makes it the strongest possible proof.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MANIFESTO / CTA -->
+<section class="manifesto">
+  <canvas id="manifesto-canvas"></canvas>
+  <div class="manifesto-z">
+    <div class="manifesto-pre"><span class="mpl"></span>The Conclusion<span class="mpl"></span></div>
+    <h2 class="manifesto-title">
+      We didn't build GenLayer<br>
+      and <em>hope</em> it was right.<br>
+      We let <span class="gd">evolution</span> prove it.
+    </h2>
+    <p class="manifesto-body">
+      Phylogenesis is not a marketing strategy. It is an epistemological method. <strong>Run enough synthetic environments. Let enough agents compete. Observe what survives.</strong> The use cases that emerge are not our predictions — they are empirical findings. The convergence on GenLayer primitives is not our claim — it is what the data shows. Every FLOP spent on simulation is a FLOP spent on truth.
+    </p>
+    <div class="hero-btns" style="opacity:1;animation:none">
+      <button class="btn-e">Explore Silicon Graveyard</button>
+      <button class="btn-o">Deploy SubZeroClaw</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>SUBZEROCLAW × PHYLOGENESIS × GENLAYER — THE AGENTIC ECONOMY PROOF</span>
+  <span>Built with <a href="#">SubZeroClaw</a> · Powered by <a href="#">GenLayer</a></span>
+</footer>
+
+<script>
+/* ── HERO CANVAS: particle field with convergence ── */
+const HC=document.getElementById('hero-canvas'),HX=HC.getContext('2d')
+function rHC(){HC.width=HC.offsetWidth;HC.height=HC.offsetHeight}
+rHC();window.addEventListener('resize',rHC)
+const hPts=[];for(let i=0;i<120;i++)hPts.push({x:Math.random(),y:Math.random(),vx:(Math.random()-.5)*.0003,vy:(Math.random()-.5)*.0003,r:Math.random()<.3?.5+Math.random()*1.5:.2+Math.random()*.5,alive:Math.random()>.35,phase:Math.random()*Math.PI*2})
+let hF=0
+function drawHero(){
+  const W=HC.width,H=HC.height;HX.clearRect(0,0,W,H);hF++
+  // draw connections
+  hPts.forEach((a,i)=>{
+    hPts.slice(i+1).forEach(b=>{
+      const dx=(a.x-b.x)*W,dy=(a.y-b.y)*H,d=Math.sqrt(dx*dx+dy*dy)
+      if(d<80){const col=a.alive&&b.alive?'0,212,255':'220,232,245';HX.beginPath();HX.moveTo(a.x*W,a.y*H);HX.lineTo(b.x*W,b.y*H);HX.strokeStyle=`rgba(${col},${(1-d/80)*.08})`;HX.lineWidth=.5;HX.stroke()}
+    })
+  })
+  // drift & draw
+  hPts.forEach(p=>{
+    p.x+=p.vx;p.y+=p.vy;p.phase+=.025
+    if(p.x<0||p.x>1)p.vx*=-1;if(p.y<0||p.y>1)p.vy*=-1
+    const pulse=.5+.5*Math.sin(p.phase)
+    const col=p.alive?`rgba(0,212,255,${.4+pulse*.4})`:`rgba(220,232,245,${.08+pulse*.06})`
+    HX.beginPath();HX.arc(p.x*W,p.y*H,p.r*(1+pulse*.2),0,Math.PI*2);HX.fillStyle=col;HX.fill()
+  })
+  requestAnimationFrame(drawHero)
+}
+drawHero()
+
+/* ── SZC CANVAS: agent swarm with fitness ── */
+const SC=document.getElementById('szc-canvas'),SX=SC.getContext('2d')
+function rSC(){SC.width=SC.offsetWidth;SC.height=440}
+rSC()
+const sAgents=[];for(let i=0;i<60;i++){const fit=Math.random();sAgents.push({x:Math.random()*SC.width,y:Math.random()*440,vx:(Math.random()-.5)*.4,vy:(Math.random()-.5)*.4,fit,size:1.5+fit*4,phase:Math.random()*Math.PI*2,gen:Math.floor(Math.random()*5)+1,alive:fit>.25})}
+let sF=0
+function drawSZC(){
+  const W=SC.width,H=440;SX.clearRect(0,0,W,H);SX.fillStyle=`rgba(6,8,12,0.3)`;SX.fillRect(0,0,W,H);sF++
+  // connections between nearby alive agents
+  sAgents.filter(a=>a.alive).forEach((a,i)=>{
+    sAgents.filter(b=>b.alive).slice(i+1).forEach(b=>{
+      const dx=a.x-b.x,dy=a.y-b.y,d=Math.sqrt(dx*dx+dy*dy)
+      if(d<60){SX.beginPath();SX.moveTo(a.x,a.y);SX.lineTo(b.x,b.y);SX.strokeStyle=`rgba(0,212,255,${(1-d/60)*.12})`;SX.lineWidth=.4;SX.stroke()}
+    })
+  })
+  sAgents.forEach(a=>{
+    a.x+=a.vx;a.y+=a.vy;a.vx*=.99;a.vy*=.99;a.phase+=.04
+    if(a.x<5)a.vx+=.05;if(a.x>W-5)a.vx-=.05;if(a.y<5)a.vy+=.05;if(a.y>H-5)a.vy-=.05
+    // random small velocity
+    a.vx+=(Math.random()-.5)*.02;a.vy+=(Math.random()-.5)*.02
+    const p=.5+.5*Math.sin(a.phase)
+    if(!a.alive){SX.beginPath();SX.arc(a.x,a.y,a.size*.7,0,Math.PI*2);SX.fillStyle=`rgba(74,95,120,0.3)`;SX.fill();return}
+    const fit01=a.fit
+    // color: low fit=amber, high fit=electric
+    const r=Math.round(0+(240-0)*( 1-fit01)), g=Math.round(212+(168-212)*( 1-fit01)), b=Math.round(255+(48-255)*( 1-fit01))
+    if(fit01>.7){const gr=SX.createRadialGradient(a.x,a.y,0,a.x,a.y,a.size*5*(1+p*.3));gr.addColorStop(0,`rgba(0,212,255,${.18*p})`);gr.addColorStop(1,'rgba(0,212,255,0)');SX.beginPath();SX.arc(a.x,a.y,a.size*5*(1+p*.3),0,Math.PI*2);SX.fillStyle=gr;SX.fill()}
+    SX.beginPath();SX.arc(a.x,a.y,a.size*(1+p*.15),0,Math.PI*2);SX.fillStyle=`rgb(${r},${g},${b})`;SX.fill()
+    // gen label for large agents
+    if(a.size>4&&a.fit>.75){SX.fillStyle=`rgba(0,212,255,0.5)`;SX.font='7px JetBrains Mono, monospace';SX.fillText(`g${a.gen}`,a.x+a.size+2,a.y+3)}
+  })
+  // fitness legend
+  SX.font='8px JetBrains Mono, monospace'
+  SX.fillStyle='rgba(0,212,255,0.4)';SX.fillText('HIGH FITNESS',8,418)
+  SX.fillStyle='rgba(240,168,48,0.5)';SX.fillText('LOW FITNESS',W-88,418)
+  requestAnimationFrame(drawSZC)
+}
+drawSZC()
+
+/* ── CONVERGENCE CANVAS: agents drifting toward GenLayer ── */
+const CC2=document.getElementById('convergence-canvas'),CX2=CC2.getContext('2d')
+function rCC2(){CC2.width=CC2.offsetWidth;CC2.height=480}
+rCC2()
+const convAgents=[];
+const SUBSTRATES=[{x:.5,y:.5,name:'GenLayer',color:'0,212,255',size:22,pull:.0015},{x:.15,y:.25,name:'EVM',color:'180,140,60',size:14,pull:.0003},{x:.8,y:.2,name:'Solana',color:'100,180,100',size:12,pull:.0003},{x:.2,y:.78,name:'Custom',color:'120,100,180',size:10,pull:.0002},{x:.75,y:.8,name:'None',color:'74,95,120',size:8,pull:0}]
+for(let i=0;i<80;i++){const a={x:Math.random(),y:Math.random(),vx:(Math.random()-.5)*.003,vy:(Math.random()-.5)*.003,fit:Math.random(),substrate:Math.floor(Math.random()*5),t:Math.random()*Math.PI*2,alive:true,age:0}; convAgents.push(a)}
+let cF2=0
+function drawConv(){
+  const W=CC2.width,H=CC2.height;CX2.clearRect(0,0,W,H);CX2.fillStyle='rgba(6,8,12,1)';CX2.fillRect(0,0,W,H);cF2++
+  // draw substrates
+  SUBSTRATES.forEach(s=>{
+    const sx=s.x*W,sy=s.y*H
+    if(s.pull>.0005){const gr=CX2.createRadialGradient(sx,sy,0,sx,sy,s.size*5);gr.addColorStop(0,`rgba(${s.color},0.12)`);gr.addColorStop(1,`rgba(${s.color},0)`);CX2.beginPath();CX2.arc(sx,sy,s.size*5,0,Math.PI*2);CX2.fillStyle=gr;CX2.fill()}
+    CX2.beginPath();CX2.arc(sx,sy,s.size,0,Math.PI*2);CX2.fillStyle=`rgba(${s.color},0.9)`;CX2.fill()
+    CX2.fillStyle=`rgba(${s.color},0.8)`;CX2.font=`bold 9px JetBrains Mono, monospace`;CX2.textAlign='center';CX2.fillText(s.name,sx,sy+s.size+12);CX2.textAlign='left'
+  })
+  // update & draw agents — they drift toward substrates, GenLayer having strongest pull
+  convAgents.forEach(a=>{
+    a.age++;a.t+=.03
+    // apply pulls from all substrates
+    SUBSTRATES.forEach((s,si)=>{
+      const sx=s.x*W,sy=s.y*H,ax=a.x*W,ay=a.y*H
+      const dx=sx-ax,dy=sy-ay,d=Math.sqrt(dx*dx+dy*dy)
+      if(d>1){const pull=s.pull*(a.fit>.6&&si===0?3:1);a.vx+=dx/d*pull;a.vy+=dy/d*pull}
+    })
+    a.vx*=.97;a.vy*=.97;a.x+=a.vx;a.y+=a.vy
+    if(a.x<0)a.x=0;if(a.x>1)a.x=1;if(a.y<0)a.y=0;if(a.y>1)a.y=1
+    // find closest substrate
+    let minD=999,closest=0;SUBSTRATES.forEach((s,si)=>{const d=Math.sqrt((a.x-s.x)**2+(a.y-s.y)**2);if(d<minD){minD=d;closest=si}})
+    a.substrate=closest
+    const col=SUBSTRATES[closest].color
+    const p=.5+.5*Math.sin(a.t)
+    CX2.beginPath();CX2.arc(a.x*W,a.y*H,1.5+a.fit*2,0,Math.PI*2);CX2.fillStyle=`rgba(${col},${0.3+a.fit*.6})`;CX2.fill()
+  })
+  // count how many are near GenLayer
+  const nearGL=convAgents.filter(a=>Math.sqrt((a.x-.5)**2+(a.y-.5)**2)<.25).length
+  CX2.font='8px JetBrains Mono, monospace';CX2.fillStyle='rgba(0,212,255,0.5)'
+  CX2.fillText(`${nearGL}/${convAgents.length} agents → GenLayer`,8,W>300?H-12:H-12)
+  requestAnimationFrame(drawConv)
+}
+drawConv()
+
+/* ── SYNTH CANVAS: environments grid ── */
+const SNYC=document.getElementById('synth-canvas'),SNYX=SNYC.getContext('2d')
+function rSNYC(){SNYC.width=SNYC.offsetWidth;SNYC.height=500}
+rSNYC()
+// generate many micro-environments
+const envs=[];
+const COLS=12,ROWS=14;
+for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++){
+  const fit=Math.random();
+  envs.push({col:c,row:r,fit,alive:fit>.28,age:Math.random()*200,phase:Math.random()*Math.PI*2,
+    txns:Math.floor(fit*100),value:Math.floor(fit*50),survivors:Math.floor(fit*20)})
+}
+let snF=0
+function drawSynth(){
+  const W=SNYC.width,H=500;SNYX.clearRect(0,0,W,H);SNYX.fillStyle='rgba(10,14,20,1)';SNYX.fillRect(0,0,W,H);snF++
+  const cw=W/COLS, ch=H/ROWS
+  envs.forEach(e=>{
+    e.age++;e.phase+=.02
+    if(e.alive&&Math.random()<.0005)e.alive=false
+    const x=e.col*cw, y=e.row*ch, p=.5+.5*Math.sin(e.phase)
+    if(!e.alive){
+      SNYX.fillStyle=`rgba(15,21,32,0.8)`;SNYX.fillRect(x+.5,y+.5,cw-1,ch-1)
+      SNYX.strokeStyle='rgba(42,53,72,0.4)';SNYX.lineWidth=.5;SNYX.strokeRect(x+.5,y+.5,cw-1,ch-1)
+      return
+    }
+    // alive environment
+    const intensity=e.fit*(0.6+p*.4)
+    const col=e.fit>.7?`rgba(0,${Math.round(100+e.fit*132)},${Math.round(180+e.fit*75)},${intensity})`:
+              e.fit>.4?`rgba(${Math.round(e.fit*240)},${Math.round(e.fit*168)},0,${intensity*.8})`:`rgba(120,90,60,${intensity*.5})`
+    SNYX.fillStyle=col;SNYX.fillRect(x+1,y+1,cw-2,ch-2)
+    // micro-indicator dots
+    const numDots=Math.floor(e.fit*5);
+    for(let d=0;d<numDots;d++){
+      const dx=x+2+Math.random()*(cw-4),dy=y+2+Math.random()*(ch-4)
+      SNYX.beginPath();SNYX.arc(dx,dy,.8,0,Math.PI*2);SNYX.fillStyle='rgba(255,255,255,0.5)';SNYX.fill()
+    }
+  })
+  // legend
+  SNYX.font='7px JetBrains Mono, monospace';SNYX.textAlign='left'
+  SNYX.fillStyle='rgba(0,212,255,0.5)';SNYX.fillText('■ HIGH PMF',8,H-20)
+  SNYX.fillStyle='rgba(240,168,48,0.5)';SNYX.fillText('■ LOW PMF',8,H-10)
+  SNYX.fillStyle='rgba(74,95,120,0.4)';SNYX.fillText(`${envs.filter(e=>!e.alive).length}/${envs.length} envs terminated`,W-130,H-10)
+  requestAnimationFrame(drawSynth)
+}
+drawSynth()
+
+/* ── MANIFESTO CANVAS ── */
+const MC2=document.getElementById('manifesto-canvas'),MX2=MC2.getContext('2d')
+function rMC2(){MC2.width=MC2.offsetWidth;MC2.height=MC2.offsetHeight}
+rMC2();window.addEventListener('resize',rMC2)
+const mRings=[];for(let i=0;i<5;i++)mRings.push({r:50+i*80,speed:.0002+i*.0001,phase:Math.random()*Math.PI*2,opacity:.05+i*.01})
+let mF=0
+function drawManifesto(){
+  const W=MC2.width,H=MC2.height;MX2.clearRect(0,0,W,H);mF++
+  const cx=W/2,cy=H*.4
+  mRings.forEach(ring=>{
+    ring.phase+=ring.speed
+    MX2.beginPath();MX2.arc(cx,cy,ring.r,0,Math.PI*2)
+    MX2.strokeStyle=`rgba(0,212,255,${ring.opacity})`;MX2.lineWidth=1;MX2.stroke()
+    // dots on ring
+    for(let d=0;d<8;d++){
+      const a=ring.phase+d*Math.PI/4
+      const dx=cx+Math.cos(a)*ring.r,dy=cy+Math.sin(a)*ring.r
+      MX2.beginPath();MX2.arc(dx,dy,1.5,0,Math.PI*2);MX2.fillStyle=`rgba(0,212,255,${ring.opacity*3})`;MX2.fill()
+    }
+  })
+  requestAnimationFrame(drawManifesto)
+}
+drawManifesto()
+
+/* ── SCROLL REVEAL ── */
+const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('v');obs.unobserve(e.target)}}),{threshold:.1})
+document.querySelectorAll('.r,.r2').forEach(el=>obs.observe(el))
+</script>
+</body>
+</html>

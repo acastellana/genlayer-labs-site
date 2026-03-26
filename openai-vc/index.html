@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GenLayer Labs — Trust Infrastructure for AI Agents</title>
+<meta name="description" content="When obligations are ambiguous, neither smart contracts nor courts scale. GenLayer resolves subjective decisions through multi-model validator consensus.">
+<style>
+/* ── RESET & BASE ── */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+body{
+  background:#0a0a0a;
+  color:#e5e5e5;
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+  font-size:16px;
+  line-height:1.7;
+}
+a{color:inherit;text-decoration:none}
+
+/* ── NAV ── */
+nav{
+  position:sticky;top:0;z-index:50;
+  border-bottom:1px solid rgba(255,255,255,0.1);
+  background:rgba(10,10,10,0.85);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+}
+.nav-inner{
+  max-width:80rem;margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1rem 1.5rem;
+}
+.nav-brand{font-size:0.875rem;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:#d4d4d4}
+.nav-links{display:flex;gap:1.75rem;font-size:0.875rem;color:#d4d4d4}
+.nav-links a{transition:color 0.2s}
+.nav-links a:hover{color:#fff}
+.nav-btns{display:flex;gap:0.75rem}
+.btn-outline{
+  padding:0.5rem 1rem;font-size:0.875rem;
+  border:1px solid rgba(255,255,255,0.15);border-radius:9999px;
+  color:#d4d4d4;transition:all 0.2s;background:transparent;
+}
+.btn-outline:hover{border-color:rgba(255,255,255,0.3);background:rgba(255,255,255,0.05);color:#fff}
+.btn-solid{
+  padding:0.5rem 1rem;font-size:0.875rem;font-weight:500;
+  border:none;border-radius:9999px;
+  background:#fff;color:#0a0a0a;transition:background 0.2s;cursor:pointer;
+}
+.btn-solid:hover{background:#d4d4d4}
+
+/* ── SECTION SYSTEM ── */
+.section{border-top:1px solid rgba(255,255,255,0.1)}
+.section-inner{max-width:80rem;margin:0 auto;padding:5rem 1.5rem 6rem}
+.section-label{font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.22em;color:#a3a3a3}
+.section-title{margin-top:1rem;font-size:clamp(2rem,4vw,3rem);font-weight:600;letter-spacing:-0.015em;color:#fff;max-width:48rem;line-height:1.08}
+.section-body{margin-top:2rem}
+
+/* ── HERO ── */
+.hero{position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(circle at top right,rgba(255,255,255,0.14),transparent 34%),radial-gradient(circle at 20% 20%,rgba(255,255,255,0.08),transparent 28%)}
+.hero-inner{
+  max-width:80rem;margin:0 auto;
+  display:grid;grid-template-columns:1.15fr 0.85fr;gap:3.5rem;
+  padding:5rem 1.5rem 7rem;
+  position:relative;z-index:1;
+}
+.hero-label{font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.24em;color:#a3a3a3;margin-bottom:1.5rem}
+.hero-title{font-size:clamp(2.5rem,5.5vw,4.5rem);font-weight:600;line-height:0.96;letter-spacing:-0.02em;color:#fff;max-width:48rem}
+.hero-sub{margin-top:1.5rem;font-size:1.125rem;line-height:2;color:#d4d4d4;max-width:32rem}
+
+/* proof stats */
+.proof-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0.75rem;margin-top:2rem;max-width:48rem}
+.proof-stat{border:1px solid rgba(255,255,255,0.1);border-radius:1rem;background:rgba(255,255,255,0.05);padding:1rem}
+.proof-stat-val{font-size:1.125rem;font-weight:600;color:#fff}
+.proof-stat-label{margin-top:0.25rem;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.18em;color:#a3a3a3}
+
+/* hero buttons */
+.hero-btns{display:flex;gap:1rem;margin-top:2.5rem;flex-wrap:wrap}
+.hero-btns .btn-solid{padding:0.75rem 1.5rem}
+.hero-btns .btn-outline{padding:0.75rem 1.5rem}
+
+/* system view */
+.system-view{
+  border:1px solid rgba(255,255,255,0.1);border-radius:2rem;
+  background:rgba(255,255,255,0.04);padding:1.5rem;
+  box-shadow:0 25px 50px rgba(0,0,0,0.3);
+  backdrop-filter:blur(4px);
+  display:flex;flex-direction:column;justify-content:center;
+}
+.sv-label{font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.24em;color:#a3a3a3;margin-bottom:1.25rem}
+.sv-layer{
+  border:1px solid rgba(255,255,255,0.1);border-radius:1rem;
+  background:rgba(255,255,255,0.05);padding:1rem 1.25rem;
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:0.75rem;
+}
+.sv-layer:last-of-type{margin-bottom:0}
+.sv-layer.highlight{border-color:rgba(255,255,255,0.25);background:rgba(255,255,255,0.1)}
+.sv-layer-name{font-size:0.875rem;font-weight:500;color:#d4d4d4}
+.sv-layer.highlight .sv-layer-name{color:#fff}
+.sv-layer-num{font-size:0.75rem;text-transform:uppercase;letter-spacing:0.2em;color:#a3a3a3}
+.sv-note{margin-top:1.5rem;font-size:0.875rem;line-height:1.75;color:#d4d4d4}
+
+/* ── CARDS ── */
+.card{
+  border:1px solid rgba(255,255,255,0.1);border-radius:1.75rem;
+  background:rgba(255,255,255,0.04);padding:1.5rem;
+  box-shadow:0 10px 30px rgba(0,0,0,0.2);
+}
+.card h3{font-size:1.125rem;font-weight:600;color:#fff}
+.card p{margin-top:0.75rem;font-size:0.875rem;line-height:1.75;color:#d4d4d4}
+
+/* ── GRIDS ── */
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+.grid-2col{display:grid;grid-template-columns:0.95fr 1.05fr;gap:2.5rem;align-items:start}
+
+/* ── STEP CARDS ── */
+.step-card{
+  border:1px solid rgba(255,255,255,0.1);border-radius:1.75rem;
+  background:rgba(255,255,255,0.04);padding:1.5rem;
+}
+.step-num{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:2.5rem;height:2.5rem;border-radius:50%;
+  border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);
+  font-size:0.875rem;font-weight:600;color:#fff;margin-bottom:1rem;
+}
+.step-card h3{font-size:1.125rem;font-weight:600;color:#fff}
+.step-card p{margin-top:0.75rem;font-size:0.875rem;line-height:1.75;color:#d4d4d4}
+
+/* ── APP CARDS ── */
+.app-card{
+  border:1px solid rgba(255,255,255,0.1);border-radius:1.75rem;
+  background:rgba(255,255,255,0.04);padding:1.5rem;
+  box-shadow:0 10px 30px rgba(0,0,0,0.2);
+}
+.app-subtitle{font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.22em;color:#a3a3a3}
+.app-name{margin-top:0.75rem;font-size:1.5rem;font-weight:600;color:#fff}
+.app-fields{margin-top:1.5rem;display:flex;flex-direction:column;gap:1.25rem}
+.app-field-title{font-size:0.875rem;font-weight:500;color:#fff}
+.app-field-body{font-size:0.875rem;line-height:1.75;color:#d4d4d4}
+
+/* ── PAPER CARDS ── */
+.paper-card{
+  border:1px solid rgba(255,255,255,0.1);border-radius:1.75rem;
+  background:rgba(255,255,255,0.04);padding:1.5rem;
+  display:flex;flex-direction:column;height:100%;
+}
+.paper-card h3{font-size:1.25rem;font-weight:600;color:#fff}
+.paper-card p{margin-top:1rem;font-size:0.875rem;line-height:1.75;color:#d4d4d4;flex:1}
+.paper-cta{
+  margin-top:1.5rem;display:inline-flex;width:fit-content;
+  border:1px solid rgba(255,255,255,0.15);border-radius:9999px;
+  padding:0.5rem 1rem;font-size:0.875rem;color:#d4d4d4;transition:all 0.2s;
+}
+.paper-cta:hover{border-color:rgba(255,255,255,0.3);background:rgba(255,255,255,0.05);color:#fff}
+
+/* ── TEAM ── */
+.team-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0.75rem;margin-top:2.5rem}
+.team-item{
+  border:1px solid rgba(255,255,255,0.1);border-radius:1rem;
+  background:rgba(255,255,255,0.04);padding:1rem 1.25rem;
+  font-size:0.875rem;color:#d4d4d4;
+}
+
+/* ── FINAL CTA ── */
+.cta-band{border-top:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.03)}
+.cta-card{
+  border:1px solid rgba(255,255,255,0.1);border-radius:2rem;
+  background:#171717;padding:2rem 3rem;
+  box-shadow:0 25px 50px rgba(0,0,0,0.3);
+  display:grid;grid-template-columns:1fr auto;gap:2rem;align-items:end;
+}
+.cta-label{font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.22em;color:#a3a3a3}
+.cta-title{margin-top:1rem;font-size:clamp(2rem,4vw,3rem);font-weight:600;letter-spacing:-0.015em;color:#fff;max-width:48rem;line-height:1.08}
+.cta-sub{margin-top:1.25rem;font-size:1.125rem;line-height:2;color:#d4d4d4;max-width:32rem}
+.cta-btns{display:flex;gap:0.75rem;flex-wrap:wrap}
+
+/* ── FOOTER ── */
+footer{border-top:1px solid rgba(255,255,255,0.1)}
+.footer-inner{
+  max-width:80rem;margin:0 auto;
+  display:flex;flex-direction:column;gap:1.5rem;
+  padding:2rem 1.5rem;font-size:0.875rem;color:#a3a3a3;
+}
+.footer-links{display:flex;gap:1.25rem;flex-wrap:wrap}
+.footer-links a{transition:color 0.2s}
+.footer-links a:hover{color:#fff}
+.footer-brand{font-weight:500;color:#d4d4d4}
+
+/* ── BACK LINK ── */
+.back-link{
+  position:fixed;bottom:1.5rem;left:1.5rem;z-index:50;
+  font-size:0.75rem;letter-spacing:0.08em;text-transform:uppercase;
+  color:#a3a3a3;border:1px solid rgba(255,255,255,0.1);
+  padding:0.4rem 0.9rem;border-radius:9999px;
+  background:rgba(10,10,10,0.85);backdrop-filter:blur(8px);
+  transition:all 0.2s;
+}
+.back-link:hover{color:#fff;border-color:rgba(255,255,255,0.3)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1024px){
+  .hero-inner{grid-template-columns:1fr}
+  .system-view{margin-top:2rem}
+  .grid-2col{grid-template-columns:1fr}
+  .cta-card{grid-template-columns:1fr}
+  .nav-links,.nav-btns{display:none}
+}
+@media(max-width:768px){
+  .proof-stats{grid-template-columns:repeat(2,1fr)}
+  .grid-3,.grid-4,.team-grid{grid-template-columns:1fr}
+  .grid-2{grid-template-columns:1fr}
+  .footer-inner{align-items:flex-start}
+}
+</style>
+</head>
+<body>
+
+<!-- BACK TO INDEX -->
+<a href="/" class="back-link">&larr; Index</a>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <div class="nav-brand">GenLayer Labs</div>
+    <div class="nav-links">
+      <a href="#problem">Problem</a>
+      <a href="#genlayer">GenLayer</a>
+      <a href="#proof">Proof</a>
+      <a href="#applications">Applications</a>
+      <a href="#research">Research</a>
+      <a href="#team">Team</a>
+    </div>
+    <div class="nav-btns">
+      <a href="#" class="btn-outline">Docs</a>
+      <a href="#" class="btn-outline">GitHub</a>
+      <a href="#" class="btn-solid">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-inner">
+    <div>
+      <div class="hero-label">GenLayer Labs</div>
+      <h1 class="hero-title">Trust infrastructure for AI agents</h1>
+      <p class="hero-sub">When obligations are ambiguous, neither smart contracts nor courts scale. GenLayer resolves subjective decisions through multi-model validator consensus.</p>
+      <div class="proof-stats">
+        <div class="proof-stat"><div class="proof-stat-val">Bradbury</div><div class="proof-stat-label">Live testnet</div></div>
+        <div class="proof-stat"><div class="proof-stat-val">$7.5M</div><div class="proof-stat-label">Seed raised</div></div>
+        <div class="proof-stat"><div class="proof-stat-val">Rally</div><div class="proof-stat-label">Live application</div></div>
+        <div class="proof-stat"><div class="proof-stat-val">Judgment layer</div><div class="proof-stat-label">Core thesis</div></div>
+      </div>
+      <div class="hero-btns">
+        <a href="#genlayer" class="btn-solid">See GenLayer</a>
+        <a href="#problem" class="btn-outline">Read the thesis</a>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center">
+      <div class="system-view">
+        <div class="sv-label">System View</div>
+        <div class="sv-layer"><span class="sv-layer-name">Applications</span><span class="sv-layer-num">Layer 1</span></div>
+        <div class="sv-layer"><span class="sv-layer-name">Agent commerce</span><span class="sv-layer-num">Layer 2</span></div>
+        <div class="sv-layer highlight"><span class="sv-layer-name">Judgment</span><span class="sv-layer-num">Layer 3</span></div>
+        <div class="sv-layer"><span class="sv-layer-name">GenLayer</span><span class="sv-layer-num">Layer 4</span></div>
+        <div class="sv-layer"><span class="sv-layer-name">Consensus</span><span class="sv-layer-num">Layer 5</span></div>
+        <div class="sv-layer"><span class="sv-layer-name">Network</span><span class="sv-layer-num">Layer 6</span></div>
+        <p class="sv-note">Built for cases where execution depends on interpretation, evidence, and subjective fulfillment.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PROBLEM ═══ -->
+<section class="section" id="problem">
+  <div class="section-inner">
+    <div class="section-label">The Problem</div>
+    <h2 class="section-title">Commerce breaks at ambiguity</h2>
+    <div class="section-body">
+      <p style="max-width:48rem;font-size:1.125rem;line-height:2;color:#d4d4d4">Agents can already transact, negotiate, and complete tasks. But the moment there is disagreement over whether an obligation was met, existing infrastructure breaks. Courts are too slow. Arbitration is too expensive. Smart contracts can execute deterministic rules, but they cannot interpret intent, evaluate evidence, or make judgment calls. Autonomous commerce fails where ambiguity begins.</p>
+      <div class="grid-3" style="margin-top:2.5rem">
+        <div class="card"><h3>Deterministic systems stop too early</h3><p>Smart contracts can enforce exact rules, but most real-world obligations depend on interpretation, evidence, and context.</p></div>
+        <div class="card"><h3>Human systems do not scale</h3><p>Legal and arbitration systems were built for human disputes, not machine-speed transactions between autonomous agents.</p></div>
+        <div class="card"><h3>Agents need enforceable resolution</h3><p>If agents are going to transact at scale, they need a programmatic way to resolve disagreement when outcomes are subjective.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ GENLAYER ═══ -->
+<section class="section" id="genlayer">
+  <div class="section-inner">
+    <div class="section-label">GenLayer</div>
+    <h2 class="section-title">A programmable judgment layer</h2>
+    <div class="section-body">
+      <div class="grid-2col">
+        <div>
+          <p style="font-size:1.125rem;line-height:2;color:#d4d4d4;max-width:32rem">GenLayer is infrastructure for programs whose execution depends on understanding the world. It allows Intelligent Contracts to process natural language, examine evidence, and resolve ambiguous conditions through decentralized multi-model consensus.</p>
+          <p style="margin-top:1.5rem;font-size:1rem;line-height:1.75;color:#a3a3a3;max-width:32rem">This is not an AI feature added to a blockchain. It is infrastructure for judgment where deterministic execution is not enough.</p>
+        </div>
+        <div class="grid-2">
+          <div class="card"><h3>Natural language obligations</h3><p>Contracts can express terms the way real agreements do, instead of reducing every condition to a rigid if-then rule.</p></div>
+          <div class="card"><h3>Evidence-aware execution</h3><p>Outcomes can depend on documents, screenshots, web data, and structured inputs, not just onchain state.</p></div>
+          <div class="card"><h3>Multi-model consensus</h3><p>Independent validators assess the same case using different models, reducing reliance on any single model or provider.</p></div>
+          <div class="card"><h3>Programmable outcomes</h3><p>Applications can use decisions to settle funds, release rewards, assign penalties, or trigger next steps automatically.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ HOW IT WORKS ═══ -->
+<section class="section" id="how-it-works">
+  <div class="section-inner">
+    <div class="section-label">How It Works</div>
+    <h2 class="section-title">From ambiguity to resolution</h2>
+    <div class="section-body">
+      <div class="grid-4">
+        <div class="step-card"><div class="step-num">1</div><h3>A contract or task defines the rules</h3><p>An application specifies the obligation, the evidence it can consider, and what happens once a decision is reached.</p></div>
+        <div class="step-card"><div class="step-num">2</div><h3>A claim must be evaluated</h3><p>The system reaches a point where execution depends on interpretation, subjective fulfillment, or real-world verification.</p></div>
+        <div class="step-card"><div class="step-num">3</div><h3>Validators assess independently</h3><p>Multiple validators evaluate the same case against the same rules using different language models and independent judgment.</p></div>
+        <div class="step-card"><div class="step-num">4</div><h3>Consensus determines the result</h3><p>The application receives a decision it can use to settle value, unlock funds, assign rewards, or continue the workflow.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PROOF ═══ -->
+<section class="section" id="proof">
+  <div class="section-inner">
+    <div class="section-label">Proof</div>
+    <h2 class="section-title">Evidence, not theory</h2>
+    <div class="section-body">
+      <p style="max-width:48rem;font-size:1.125rem;line-height:2;color:#d4d4d4">GenLayer is being built through live systems, real usage, and formal research. This is not a speculative category bet. It is an infrastructure thesis under active validation.</p>
+      <div class="grid-2" style="margin-top:2.5rem">
+        <div class="card"><h3>Live deployment</h3><p>Rally is a live system where subjective campaign fulfillment is evaluated programmatically.</p></div>
+        <div class="card"><h3>Operational validation</h3><p>GenLayer has already processed real decisions in production-like environments where ambiguity is part of the workflow.</p></div>
+        <div class="card"><h3>Formal foundations</h3><p>The protocol is supported by research on consensus over ambiguous specifications and robustness in decentralized validator networks.</p></div>
+        <div class="card"><h3>Capital and execution</h3><p>GenLayer Labs has raised $7.5M to build the trust layer for autonomous commerce.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ APPLICATIONS ═══ -->
+<section class="section" id="applications">
+  <div class="section-inner">
+    <div class="section-label">Applications</div>
+    <h2 class="section-title">The same constraint appears across different markets</h2>
+    <div class="section-body">
+      <p style="max-width:48rem;font-size:1.125rem;line-height:2;color:#d4d4d4">Different workflows. Same bottleneck. Wherever obligations are ambiguous, a judgment layer becomes necessary.</p>
+      <div class="grid-3" style="margin-top:2.5rem">
+        <div class="app-card">
+          <div class="app-subtitle">General agent-to-agent agreements</div>
+          <div class="app-name">Internet Court</div>
+          <div class="app-fields">
+            <div><div class="app-field-title">Where ambiguity appears</div><p class="app-field-body">Two parties disagree on whether contractual terms were actually met.</p></div>
+            <div><div class="app-field-title">Why old systems fail</div><p class="app-field-body">Courts are too slow and jurisdiction-bound. Arbitration requires humans and does not scale to software-native workflows.</p></div>
+            <div><div class="app-field-title">What GenLayer does</div><p class="app-field-body">Validators examine the contract, evaluate the evidence, and return an outcome applications can enforce programmatically.</p></div>
+          </div>
+        </div>
+        <div class="app-card">
+          <div class="app-subtitle">Marketing fulfillment and campaign rewards</div>
+          <div class="app-name">Rally</div>
+          <div class="app-fields">
+            <div><div class="app-field-title">Where ambiguity appears</div><p class="app-field-body">Did the creator fulfill the campaign terms? Was the content valid? Was the engagement legitimate?</p></div>
+            <div><div class="app-field-title">Why old systems fail</div><p class="app-field-body">Traditional campaign workflows rely on manual review, subjective judgment, and expensive operational overhead.</p></div>
+            <div><div class="app-field-title">What GenLayer does</div><p class="app-field-body">Intelligent Contracts evaluate submission quality, verify conditions, and determine reward outcomes automatically.</p></div>
+          </div>
+        </div>
+        <div class="app-card">
+          <div class="app-subtitle">Software quality and code review</div>
+          <div class="app-name">MergeProof</div>
+          <div class="app-fields">
+            <div><div class="app-field-title">Where ambiguity appears</div><p class="app-field-body">Is a pull request acceptable? Is a bug report valid? Does the code meet the required standard?</p></div>
+            <div><div class="app-field-title">Why old systems fail</div><p class="app-field-body">Code review does not scale with AI-generated software, and quality decisions are often subjective, inconsistent, and unpaid.</p></div>
+            <div><div class="app-field-title">What GenLayer does</div><p class="app-field-body">GenLayer enables programmatic evaluation of code quality, bug severity, and review outcomes in high-volume software workflows.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ WHY NOW ═══ -->
+<section class="section" id="why-now">
+  <div class="section-inner">
+    <div class="section-label">Why Now</div>
+    <h2 class="section-title">As agents do more, judgment matters more</h2>
+    <div class="section-body">
+      <div class="grid-2col">
+        <p style="font-size:1.125rem;line-height:2;color:#d4d4d4;max-width:32rem">The industry is focused on making agents more capable. The next bottleneck is what happens when those agents begin to transact, coordinate, and disagree. Generation is scaling quickly. Enforcement, adjudication, and subjective verification are not. As autonomous systems take economic action, value will concentrate in the layer that can resolve ambiguity.</p>
+        <div style="display:flex;flex-direction:column;gap:1rem">
+          <div class="card"><h3>Agents are moving from assistance to execution</h3><p>The more software takes action, the more often it reaches decisions that cannot be reduced to deterministic rules.</p></div>
+          <div class="card"><h3>Disputes become an operational reality</h3><p>As autonomous workflows touch money, contracts, and deliverables, disagreement stops being an edge case.</p></div>
+          <div class="card"><h3>The missing layer becomes more valuable</h3><p>The higher the economic value of agent-driven workflows, the more important enforceable judgment becomes.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ RESEARCH ═══ -->
+<section class="section" id="research">
+  <div class="section-inner">
+    <div class="section-label">Research</div>
+    <h2 class="section-title">Formal work behind the protocol</h2>
+    <div class="section-body">
+      <p style="max-width:32rem;font-size:1.125rem;line-height:2;color:#d4d4d4">The research exists to support the system, not decorate it.</p>
+      <div class="grid-3" style="margin-top:2.5rem">
+        <div class="paper-card"><h3>Consensus over Ambiguous Specifications</h3><p>A formal treatment of probabilistic agreement for computational outcomes that depend on interpretation rather than exact determinism.</p><a href="#" class="paper-cta">Read paper</a></div>
+        <div class="paper-card"><h3>Greyboxing</h3><p>Research on adversarial robustness in decentralized validator networks and the limits of partial-knowledge attacks.</p><a href="#" class="paper-cta">Read paper</a></div>
+        <div class="paper-card"><h3>SubZeroClaw</h3><p>A minimal autonomous agent runtime exploring the lower bound of agentic system complexity.</p><a href="#" class="paper-cta">Read report</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ TEAM ═══ -->
+<section class="section" id="team">
+  <div class="section-inner">
+    <div class="section-label">Team</div>
+    <h2 class="section-title">Built by researchers, engineers, and protocol builders</h2>
+    <div class="section-body">
+      <p style="max-width:32rem;font-size:1.125rem;line-height:2;color:#d4d4d4">A team spanning frontier AI, blockchain infrastructure, economics, and applied systems design.</p>
+      <div class="team-grid">
+        <div class="team-item">Jos&eacute; Mar&iacute;a Lago &middot; CTO &amp; Co-Founder</div>
+        <div class="team-item">Albert Castellana &middot; CEO &amp; Co-Founder</div>
+        <div class="team-item">Edgars Nem&scaron;e &middot; CPO &amp; Co-Founder</div>
+        <div class="team-item">Navi Brar &middot; Chief Operating Officer</div>
+        <div class="team-item">Afsaneh Heyat &middot; Head of Finance</div>
+        <div class="team-item">Kira Prokopenko &middot; Compiler Engineer</div>
+        <div class="team-item">Kiril Antevski &middot; Senior Solidity Developer</div>
+        <div class="team-item">Claudio Mello &middot; Senior Solidity Developer</div>
+        <div class="team-item">Dari&eacute;n Hern&aacute;ndez Gonz&aacute;lez &middot; Senior Blockchain Developer</div>
+        <div class="team-item">Rafal Rabenda &middot; DevOps Engineer</div>
+        <div class="team-item">Daniel Juli&aacute;n Rojas Cruz &middot; Senior Full Stack Developer</div>
+        <div class="team-item">Araceli Garc&iacute;a &middot; Operations &amp; Finance</div>
+        <div class="team-item">Ana Mar&iacute;a Mahecha &middot; Business Development</div>
+        <div class="team-item">Luciano Pieroni &middot; Head of Socials</div>
+        <div class="team-item">Burak &lsquo;Rahil&rsquo; Ayd&inodot;n &middot; Head of Growth</div>
+      </div>
+      <p style="margin-top:2rem;font-size:0.875rem;line-height:1.75;color:#a3a3a3">Experience across Ethereum Foundation, JPMorgan, PayPal, EY, Cisco, Polygon, and quantitative systems.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FINAL CTA ═══ -->
+<section class="cta-band">
+  <div style="max-width:80rem;margin:0 auto;padding:5rem 1.5rem">
+    <div class="cta-card">
+      <div>
+        <div class="cta-label">Final Thesis</div>
+        <h2 class="cta-title">If AI agents transact, they need a trust layer</h2>
+        <p class="cta-sub">GenLayer is building the infrastructure for judgment under ambiguity.</p>
+      </div>
+      <div class="cta-btns">
+        <a href="#" class="btn-solid" style="padding:0.75rem 1.5rem">Talk to us</a>
+        <a href="#" class="btn-outline" style="padding:0.75rem 1.5rem">Read the docs</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner" style="flex-direction:row;align-items:center;justify-content:space-between">
+    <div class="footer-brand">GenLayer Labs</div>
+    <div class="footer-links">
+      <a href="#">Protocol</a>
+      <a href="#">GitHub</a>
+      <a href="#">genlayer.com</a>
+      <a href="#">Discord</a>
+      <a href="#">X</a>
+    </div>
+    <div>&copy; 2026 GenLayer Labs</div>
+  </div>
+</footer>
+
+</body>
+</html>

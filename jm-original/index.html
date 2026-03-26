@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GenLayer Labs — Frontier AI Research</title>
+<script>
+MathJax = {
+  tex: { inlineMath:[['$','$']], displayMath:[['$$','$$']] },
+  options: { skipHtmlTags:['script','noscript','style','textarea'] },
+  startup: { typeset: false }
+};
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:        #f8f6f1;
+  --bg2:       #f1ede4;
+  --bg3:       #e9e3d8;
+  --surface:   #ffffff;
+  --border:    rgba(40,30,15,0.11);
+  --border2:   rgba(40,30,15,0.055);
+  --text:      #1b1810;
+  --text-dim:  rgba(27,24,16,0.5);
+  --text-dimmer: rgba(27,24,16,0.27);
+  --gold:      #8a6a2e;
+  --gold-light:#b8924c;
+  --gold-bg:   rgba(138,106,46,0.07);
+  --gold-bdr:  rgba(138,106,46,0.18);
+  --teal:      #2a6b78;
+  --teal-bg:   rgba(42,107,120,0.07);
+  --teal-bdr:  rgba(42,107,120,0.18);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:'EB Garamond',Georgia,serif;
+  font-size:1.08rem;line-height:1.75;overflow-x:hidden;
+}
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.022'/%3E%3C/svg%3E");
+  opacity:0.55;
+}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:50;
+  padding:1.1rem 4rem;
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(248,246,241,0.9);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border2);
+}
+.nav-logo{display:flex;align-items:center;gap:0.7rem;text-decoration:none}
+.nav-logo svg{height:24px;width:auto}
+.nav-wordmark{
+  font-family:'JetBrains Mono',monospace;font-size:0.7rem;
+  letter-spacing:0.15em;text-transform:uppercase;color:var(--text);font-weight:400;
+}
+.nav-links{display:flex;gap:2.3rem;list-style:none}
+.nav-links a{
+  font-family:'JetBrains Mono',monospace;font-size:0.66rem;
+  letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--text-dim);text-decoration:none;transition:color 0.2s;
+}
+.nav-links a:hover{color:var(--text)}
+
+main{position:relative;z-index:1}
+
+/* HERO */
+.hero{
+  min-height:100vh;max-width:100%;padding:0;
+  display:flex;flex-direction:column;
+  justify-content:center;align-items:flex-start;
+  position:relative;overflow:hidden;
+}
+.hero-inner{
+  max-width:1000px;width:100%;
+  margin:0 auto;padding:8rem 4rem 4rem;
+}
+.hero-label{
+  font-family:'JetBrains Mono',monospace;font-size:0.66rem;
+  letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:2rem;
+  opacity:0;animation:fadeUp 0.7s 0.2s forwards;
+}
+.hero-title{
+  font-family:'Cormorant Garamond',Georgia,serif;
+  font-size:clamp(3.2rem,7vw,6rem);
+  font-weight:300;line-height:1.03;letter-spacing:-0.01em;
+  color:var(--text);margin-bottom:1.2rem;
+  opacity:0;animation:fadeUp 0.7s 0.35s forwards;
+}
+.hero-title em{font-style:italic;color:var(--gold)}
+.hero-sub{
+  font-size:1.28rem;color:var(--text-dim);
+  max-width:540px;line-height:1.65;margin-bottom:3.5rem;
+  opacity:0;animation:fadeUp 0.7s 0.5s forwards;
+}
+.hero-pills{
+  display:flex;gap:0.65rem;flex-wrap:wrap;
+  opacity:0;animation:fadeUp 0.7s 0.65s forwards;
+}
+.hero-pill{
+  font-family:'JetBrains Mono',monospace;font-size:0.61rem;
+  letter-spacing:0.09em;text-transform:uppercase;
+  color:var(--text-dimmer);border:1px solid var(--border);
+  padding:0.3rem 0.85rem;border-radius:2px;background:var(--surface);
+}
+.hero-wm{
+  position:absolute;right:-3rem;top:50%;
+  transform:translateY(-50%);
+  opacity:0;pointer-events:none;
+  animation:fadeUp 1.2s 0.9s forwards;
+}
+.hero-wm svg{width:460px;height:auto;opacity:0.038}
+
+/* SECTIONS */
+section{max-width:900px;margin:0 auto;padding:6rem 2rem}
+section+section{border-top:1px solid var(--border2)}
+.sec-label{
+  font-family:'JetBrains Mono',monospace;font-size:0.63rem;
+  letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:0.5rem;
+}
+.sec-title{
+  font-family:'Cormorant Garamond',Georgia,serif;
+  font-size:clamp(1.9rem,3.8vw,3rem);
+  font-weight:300;line-height:1.1;margin-bottom:0.55rem;
+}
+.sec-title em{font-style:italic;color:var(--gold)}
+.sec-intro{color:var(--text-dim);max-width:600px;margin-bottom:3.5rem;font-size:1.04rem}
+
+/* AHEAD BAND */
+.band{
+  background:var(--bg2);
+  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  padding:6rem 2rem;
+}
+.band-inner{max-width:900px;margin:0 auto}
+.ahead-grid{
+  display:grid;grid-template-columns:1fr 1fr 1fr;
+  border:1px solid var(--border);border-radius:3px;
+  overflow:hidden;margin-top:3.5rem;background:var(--surface);
+}
+.ahead-col{
+  padding:2.4rem 2rem;border-right:1px solid var(--border);
+  opacity:0;transform:translateY(10px);transition:opacity 0.55s,transform 0.55s;
+}
+.ahead-col:last-child{border-right:none}
+.ahead-col.visible{opacity:1;transform:none}
+.ahead-year{
+  font-family:'Cormorant Garamond',Georgia,serif;
+  font-size:3.1rem;font-weight:300;color:var(--gold);line-height:1;margin-bottom:0.45rem;
+}
+.ahead-tag{
+  font-family:'JetBrains Mono',monospace;font-size:0.59rem;
+  letter-spacing:0.12em;text-transform:uppercase;
+  color:var(--text-dimmer);margin-bottom:0.75rem;
+}
+.ahead-title{
+  font-family:'Cormorant Garamond',Georgia,serif;
+  font-size:1.12rem;font-weight:600;color:var(--text);
+  margin-bottom:0.45rem;line-height:1.25;
+}
+.ahead-body{font-size:0.91rem;color:var(--text-dim);line-height:1.65}
+.ahead-quote{
+  max-width:660px;margin:4rem auto 0;text-align:center;
+  opacity:0;transform:translateY(8px);transition:opacity 0.6s,transform 0.6s;
+}
+.ahead-quote.visible{opacity:1;transform:none}
+.ahead-quote blockquote{
+  font-family:'Cormorant Garamond',Georgia,serif;
+  font-size:1.45rem;font-weight:300;font-style:italic;
+  color:var(--text-dim);line-height:1.5;
+}
+.ahead-quote cite{
+  display:block;margin-top:1rem;
+  font-family:'JetBrains Mono',monospace;font-size:0.59rem;
+  letter-spacing:0.12em;color:var(--text-dimmer);text-transform:uppercase;font-style:normal;
+}
+
+/* COMPUTE BAND */
+.compute-band{
+  background:var(--bg);border-top:1px solid var(--border2);padding:6rem 2rem;
+}
+.compute-inner{max-width:900px;margin:0 auto}
+.compute-claim{
+  font-family:'Cormorant Garamond',Georgia,serif;
+  font-size:clamp(1.65rem,3vw,2.4rem);
+  font-weight:300;line-height:1.3;color:var(--text);
+  max-width:660px;margin:2.5rem 0 1.8rem;
+}
+.compute-claim em{font-style:italic;color:var(--gold)}
+.compute-body{font-size:1.04rem;color:var(--text-dim);max-width:610px;line-height:1.8;margin-bottom:2.5rem}
+
+/* THEOREM */
+.thm{
+  background:var(--surface);border:1px solid var(--border);
+  border-left:3px solid var(--gold);
+  padding:1.55rem 2rem;margin:1.8rem 0;border-radius:0 3px 3px 0;
+}
+.thm.teal{border-left-color:var(--teal)}
+.thm-label{
+  font-family:'JetBrains Mono',monospace;font-size:0.61rem;
+  letter-spacing:0.1em;color:var(--gold);text-transform:uppercase;margin-bottom:0.45rem;
+}
+.thm.teal .thm-label{color:var(--teal)}
+.thm-body{font-size:1rem;line-height:1.8;color:var(--text)}
+
+/* TIMELINE */
+.timeline{position:relative;padding-left:2rem}
+.timeline::before{
+  content:'';position:absolute;left:0;top:0.4rem;bottom:0;
+  width:1px;
+  background:linear-gradient(to bottom,var(--gold-bdr),var(--teal-bdr),transparent);
+}
+.tl-item{
+  position:relative;padding:0 0 3.5rem 2.5rem;
+  opacity:0;transform:translateX(-10px);transition:opacity 0.55s,transform 0.55s;
+}
+.tl-item.visible{opacity:1;transform:none}
+.tl-dot{
+  position:absolute;left:-2rem;top:0.42rem;
+  width:8px;height:8px;border-radius:50%;
+  background:var(--gold);border:2px solid var(--bg);
+  box-shadow:0 0 0 1px var(--gold-bdr);
+}
+.tl-item.teal .tl-dot{background:var(--teal);box-shadow:0 0 0 1px var(--teal-bdr)}
+.tl-year{
+  font-family:'JetBrains Mono',monospace;font-size:0.61rem;
+  color:var(--text-dimmer);letter-spacing:0.1em;margin-bottom:0.22rem;
+}
+.tl-name{
+  font-family:'Cormorant Garamond',Georgia,serif;
+  font-size:1.52rem;font-weight:600;color:var(--text);margin-bottom:0.28rem;
+}
+.tl-tag{
+  display:inline-block;font-family:'JetBrains Mono',monospace;
+  font-size:0.55rem;letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--gold);border:1px solid var(--gold-bdr);background:var(--gold-bg);
+  padding:0.1rem 0.5rem;border-radius:2px;margin-bottom:0.55rem;
+}
+.tl-item.teal .tl-tag{color:var(--teal);border-color:var(--teal-bdr);background:var(--teal-bg)}
+.tl-desc{font-size:1rem;color:var(--text-dim);max-width:570px;line-height:1.72}
+.tl-contrib{
+  margin-top:0.65rem;font-family:'JetBrains Mono',monospace;
+  font-size:0.65rem;color:var(--text-dimmer);letter-spacing:0.03em;
+}
+.tl-contrib span{color:var(--gold)}
+.tl-item.teal .tl-contrib span{color:var(--teal)}
+
+/* PILLARS */
+.pillars-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem;margin-top:2.8rem}
+.pillar-card{
+  background:var(--surface);border:1px solid var(--border);
+  padding:1.75rem;border-radius:3px;position:relative;overflow:hidden;
+  transition:box-shadow 0.2s;
+}
+.pillar-card:hover{box-shadow:0 2px 18px rgba(0,0,0,0.055)}
+.pillar-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--gold),transparent);opacity:0;transition:opacity 0.3s;
+}
+.pillar-card:hover::before{opacity:1}
+.pillar-num{
+  font-family:'JetBrains Mono',monospace;font-size:0.57rem;
+  color:var(--text-dimmer);letter-spacing:0.1em;margin-bottom:0.75rem;
+}
+.pillar-title{
+  font-family:'Cormorant Garamond',Georgia,serif;font-size:1.28rem;
+  font-weight:600;color:var(--text);margin-bottom:0.48rem;line-height:1.2;
+}
+.pillar-body{font-size:0.92rem;color:var(--text-dim);line-height:1.65}
+.pillar-formula{
+  margin-top:1rem;padding:0.75rem 1rem;
+  background:var(--bg2);border-radius:2px;border:1px solid var(--border2);
+  font-size:0.9rem;overflow-x:auto;
+}
+
+/* PUBLICATIONS */
+.pub-list{margin-top:2.5rem}
+.pub-item{
+  display:grid;grid-template-columns:3.5rem 1fr;gap:1.5rem;
+  padding:1.9rem 0;border-top:1px solid var(--border2);
+  opacity:0;transform:translateY(6px);transition:opacity 0.5s,transform 0.5s;
+}
+.pub-item.visible{opacity:1;transform:none}
+.pub-year{font-family:'JetBrains Mono',monospace;font-size:0.65rem;color:var(--gold);padding-top:0.2rem}
+.pub-venue{
+  font-family:'JetBrains Mono',monospace;font-size:0.58rem;
+  letter-spacing:0.08em;color:var(--text-dimmer);text-transform:uppercase;margin-bottom:0.28rem;
+}
+.pub-title{
+  font-family:'Cormorant Garamond',Georgia,serif;font-size:1.18rem;
+  font-style:italic;color:var(--text);margin-bottom:0.32rem;line-height:1.3;
+}
+.pub-authors{font-size:0.87rem;color:var(--text-dim)}
+.pub-tag{
+  display:inline-block;font-family:'JetBrains Mono',monospace;
+  font-size:0.52rem;letter-spacing:0.08em;text-transform:uppercase;
+  padding:0.1rem 0.44rem;border-radius:2px;margin-top:0.38rem;margin-right:0.28rem;
+}
+.pub-tag.new{background:var(--gold-bg);color:var(--gold);border:1px solid var(--gold-bdr)}
+.pub-tag.sub{background:var(--teal-bg);color:var(--teal);border:1px solid var(--teal-bdr)}
+
+/* ACTIVE */
+.active-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-top:2.8rem}
+.active-card{
+  border:1px solid var(--border);background:var(--surface);
+  padding:1.45rem;border-radius:3px;position:relative;
+  transition:box-shadow 0.2s;
+}
+.active-card:hover{box-shadow:0 2px 14px rgba(0,0,0,0.05)}
+.active-card::after{
+  content:'';position:absolute;top:1rem;right:1rem;
+  width:6px;height:6px;border-radius:50%;
+  background:var(--gold);animation:pulse 2.2s infinite;
+}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.2}}
+.active-title{
+  font-family:'Cormorant Garamond',Georgia,serif;font-size:1.08rem;
+  font-weight:600;color:var(--text);margin-bottom:0.38rem;
+  padding-right:1.5rem;line-height:1.25;
+}
+.active-body{font-size:0.85rem;color:var(--text-dim);line-height:1.62}
+.active-status{
+  margin-top:0.85rem;font-family:'JetBrains Mono',monospace;
+  font-size:0.57rem;color:var(--gold);letter-spacing:0.1em;text-transform:uppercase;
+}
+
+/* FLAGSHIP */
+.flagship-band{
+  background:var(--bg2);
+  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  padding:6rem 2rem;
+}
+.flagship-inner{max-width:900px;margin:0 auto}
+.flagship-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:5rem;
+  align-items:start;margin-top:4rem;
+}
+.flagship-stat{padding:1.25rem 0;border-top:1px solid var(--border)}
+.flagship-stat-num{
+  font-family:'Cormorant Garamond',Georgia,serif;font-size:2.5rem;
+  font-weight:300;color:var(--gold);line-height:1;
+}
+.flagship-stat-label{
+  font-family:'JetBrains Mono',monospace;font-size:0.6rem;
+  color:var(--text-dimmer);letter-spacing:0.1em;text-transform:uppercase;margin-top:0.22rem;
+}
+
+/* TEAM */
+.team-band{padding:6rem 2rem;border-top:1px solid var(--border2)}
+.team-inner{max-width:900px;margin:0 auto}
+
+/* Founders — large, prominent */
+.founders-list{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:0;
+  border:1px solid var(--border);border-radius:3px;overflow:hidden;
+  background:var(--surface);margin-bottom:3rem;
+}
+.founder-item{
+  padding:2rem 2rem 1.8rem;
+  border-right:1px solid var(--border);
+}
+.founder-item:last-child{border-right:none}
+.founders-list .team-name{
+  font-family:'Cormorant Garamond',Georgia,serif;font-size:1.35rem;
+  font-weight:600;color:var(--text);line-height:1.2;margin-bottom:0.25rem;
+}
+.founders-list .team-role{
+  font-family:'JetBrains Mono',monospace;font-size:0.6rem;
+  letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);
+}
+
+/* Core team — clean ledger rows */
+.team-list{
+  display:grid;grid-template-columns:1fr 1fr;gap:0;
+  border:1px solid var(--border);border-radius:3px;overflow:hidden;
+  background:var(--surface);
+}
+.team-list-item{
+  display:flex;justify-content:space-between;align-items:baseline;
+  padding:0.9rem 1.5rem;
+  border-bottom:1px solid var(--border2);
+  border-right:1px solid var(--border2);
+  transition:background 0.15s;
+}
+.team-list-item:nth-child(even){border-right:none}
+.team-list-item:nth-last-child(-n+2){border-bottom:none}
+.team-list-item:hover{background:var(--bg2)}
+.tl-name-text{
+  font-family:'EB Garamond',Georgia,serif;font-size:1.05rem;
+  color:var(--text);font-weight:500;
+}
+.tl-role-text{
+  font-family:'JetBrains Mono',monospace;font-size:0.58rem;
+  letter-spacing:0.07em;text-transform:uppercase;color:var(--text-dimmer);
+  text-align:right;padding-left:1rem;
+}
+
+/* ALUMNI */
+.alumni-strip{
+  padding:3rem 2rem;border-top:1px solid var(--border2);
+  text-align:center;max-width:900px;margin:0 auto;
+}
+.alumni-label{
+  font-family:'JetBrains Mono',monospace;font-size:0.59rem;
+  letter-spacing:0.16em;color:var(--text-dimmer);text-transform:uppercase;margin-bottom:1.7rem;
+}
+.alumni-logos{
+  display:flex;flex-wrap:wrap;gap:0.7rem 2rem;
+  justify-content:center;align-items:center;
+}
+.alumni-logos img{
+  height:19px;width:auto;
+  filter:grayscale(100%) opacity(0.28);transition:filter 0.2s;
+}
+.alumni-logos img:hover{filter:grayscale(50%) opacity(0.6)}
+
+/* FOOTER */
+footer{
+  max-width:900px;margin:0 auto;
+  padding:2.8rem 2rem;
+  display:flex;justify-content:space-between;align-items:center;
+  border-top:1px solid var(--border2);
+}
+.footer-logo{display:flex;align-items:center;gap:0.65rem}
+.footer-logo svg{height:19px}
+.footer-wordmark{
+  font-family:'JetBrains Mono',monospace;font-size:0.63rem;
+  color:var(--text);letter-spacing:0.14em;
+}
+.footer-links{display:flex;gap:1.7rem;list-style:none}
+.footer-links a{
+  font-family:'JetBrains Mono',monospace;font-size:0.58rem;
+  color:var(--text-dimmer);text-decoration:none;letter-spacing:0.08em;
+  text-transform:uppercase;transition:color 0.2s;
+}
+.footer-links a:hover{color:var(--text)}
+.footer-copy{font-family:'JetBrains Mono',monospace;font-size:0.58rem;color:var(--text-dimmer)}
+
+/* RULE */
+.rule-label{
+  display:flex;align-items:center;gap:1rem;margin:2.5rem 0 2rem;
+}
+.rule-label span{
+  font-family:'JetBrains Mono',monospace;font-size:0.57rem;
+  color:var(--text-dimmer);letter-spacing:0.1em;text-transform:uppercase;white-space:nowrap;
+}
+.rule-label::before,.rule-label::after{content:'';flex:1;height:1px;background:var(--border2)}
+
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.obs{opacity:0;transform:translateY(12px);transition:opacity 0.6s,transform 0.6s}
+.obs.visible{opacity:1;transform:none}
+
+@media(max-width:720px){
+  nav{padding:1rem 1.5rem}.nav-links{display:none}
+  .hero-inner{padding:6rem 1.5rem 2rem}
+  .hero-wm{display:none}
+  .ahead-grid,.active-grid,.flagship-grid,.founders-list,.team-list{grid-template-columns:1fr}
+  .team-list-item{border-right:none}
+  .team-list-item:nth-last-child(-n+2){border-bottom:1px solid var(--border2)}
+  .team-list-item:last-child{border-bottom:none}
+  footer{flex-direction:column;gap:1.5rem;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<!-- INLINE SVG LOGO DEFS (reusable) -->
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="gl-mark" viewBox="0 0 97.76 91.93">
+    <polygon points="44.26 32.35 27.72 67.12 43.29 74.9 0 91.93 44.26 0 44.26 32.35"/>
+    <polygon points="53.5 32.35 70.04 67.12 54.47 74.9 97.76 91.93 53.5 0 53.5 32.35"/>
+    <polygon points="48.64 43.78 58.33 62.94 48.64 67.69 39.47 62.92 48.64 43.78" opacity="0.7"/>
+  </symbol>
+</svg>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">
+    <svg width="24" height="23"><use href="#gl-mark" fill="#8a6a2e"/></svg>
+    <span class="nav-wordmark">GenLayer Labs</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#ahead">Track Record</a></li>
+    <li><a href="#genlayer">GenLayer</a></li>
+    <li><a href="#research">Research</a></li>
+    <li><a href="#publications">Papers</a></li>
+    <li><a href="#team">Team</a></li>
+  </ul>
+</nav>
+
+<main>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <p class="hero-label">Frontier AI Research Laboratory</p>
+    <h1 class="hero-title">
+      Engineering the<br>
+      <em>Trust Layer</em><br>
+      for Autonomous AI
+    </h1>
+    <p class="hero-sub">
+      Always ahead of the field —
+      from minimal agents to civilisational decision infrastructure.
+    </p>
+    <div class="hero-pills">
+      <span class="hero-pill">Consensus Theory</span>
+      <span class="hero-pill">Autonomous Agents</span>
+      <span class="hero-pill">Adversarial Robustness</span>
+      <span class="hero-pill">Kolmogorov Minimality</span>
+      <span class="hero-pill">Swarm Optimisation</span>
+    </div>
+  </div>
+  <div class="hero-wm" aria-hidden="true">
+    <svg width="460" height="420" viewBox="0 0 97.76 91.93" xmlns="http://www.w3.org/2000/svg">
+      <use href="#gl-mark" fill="#1b1810"/>
+    </svg>
+  </div>
+</div>
+
+<!-- §0 — ALWAYS AHEAD -->
+<div class="band" id="ahead">
+  <div class="band-inner">
+    <p class="sec-label">§0 — Track Record</p>
+    <h2 class="sec-title">Always <em>Before the Field<br>Catches Up</em></h2>
+    <p class="sec-intro obs">
+      Every system GenLayer Labs has shipped predated its category.
+      Not by months — by years. This is the consequence of working from first principles
+      when the industry is still working from analogies.
+    </p>
+    <div class="ahead-grid">
+      <div class="ahead-col">
+        <div class="ahead-year">2021</div>
+        <div class="ahead-tag">We shipped</div>
+        <div class="ahead-title">Self-Reflecting Terminal Agents</div>
+        <p class="ahead-body">yAgents observed its own execution trace, reasoned over it, and modified behaviour in the next step. The concept the industry calls "agentic coding" had no name yet.</p>
+      </div>
+      <div class="ahead-col">
+        <div class="ahead-year">2022</div>
+        <div class="ahead-tag">We shipped</div>
+        <div class="ahead-title">Multi-Agent Autonomous Frameworks</div>
+        <p class="ahead-body">GenWorlds: coordinated LLM networks without a central planner. The category was formalised by the rest of the field 18 months later.</p>
+      </div>
+      <div class="ahead-col">
+        <div class="ahead-year">2023</div>
+        <div class="ahead-tag">We shipped</div>
+        <div class="ahead-title">Intelligent Contracts On-Chain</div>
+        <p class="ahead-body">Programs that resolve ambiguous natural-language predicates via decentralised LLM consensus. Supported by published mathematics from CRM (UAB).</p>
+      </div>
+    </div>
+    <div class="ahead-quote">
+      <blockquote>
+        "We do not react to trends.<br>
+        We formalise what is coming and build it before it arrives."
+      </blockquote>
+      <cite>— GenLayer Labs Research Philosophy</cite>
+    </div>
+  </div>
+</div>
+
+<!-- §1 — THE NEXT PHASE -->
+<div class="compute-band">
+  <div class="compute-inner">
+    <p class="sec-label obs">§1 — The Next Phase</p>
+    <div class="compute-claim obs">
+      We are now in the position to apply <em>massive compute</em> to generate
+      intelligence and breakthroughs.
+    </div>
+    <p class="compute-body obs">
+      The theoretical foundations are in place. The formal treatment of consensus over
+      ambiguous specifications is published. The minimal agent architecture is proven.
+      The adversarial robustness bounds are derived. What remains is the computational
+      phase: deploying these results at scale.
+    </p>
+  </div>
+</div>
+
+<!-- §2 — GENLAYER FLAGSHIP -->
+<div class="flagship-band" id="genlayer">
+  <div class="flagship-inner">
+    <p class="sec-label">§2 — Flagship Product</p>
+    <h2 class="sec-title">GenLayer:<br><em>Decision Infrastructure</em><br>for the AI Age</h2>
+    <div class="flagship-grid obs" style="margin-top:3rem">
+      <div>
+        <p style="font-size:1.04rem;color:var(--text-dim);line-height:1.82;margin-bottom:1.7rem">
+          GenLayer is not a blockchain with an AI feature. It is infrastructure for a new class
+          of computation: programs whose execution requires understanding the world.
+        </p>
+        <p style="font-size:1.04rem;color:var(--text-dim);line-height:1.82">
+          Theoretical foundations published. Protocol live on testnet. Mainnet imminent.
+        </p>
+      </div>
+      <div>
+        <div class="flagship-stat">
+          <div class="flagship-stat-num">~$200K</div>
+          <div class="flagship-stat-label">Demonstrated ARR · Rally.fun</div>
+        </div>
+        <div class="flagship-stat">
+          <div class="flagship-stat-num">$7.5M</div>
+          <div class="flagship-stat-label">Seed funding raised</div>
+        </div>
+        <div class="flagship-stat">
+          <div class="flagship-stat-num">2025</div>
+          <div class="flagship-stat-label">Mainnet launch</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- §2 — RESEARCH ARC -->
+<section id="research">
+  <p class="sec-label">§3 — Research Arc</p>
+  <h2 class="sec-title">Five Systems,<br><em>One Thesis</em></h2>
+  <p class="sec-intro">
+    Each system encodes a research question.
+    The arc is coherent: minimum description length, maximum capability.
+  </p>
+  <div class="timeline">
+    <div class="tl-item obs">
+      <div class="tl-dot"></div>
+      <div class="tl-year">2021–2022</div>
+      <div class="tl-name">yAgents</div>
+      <div class="tl-tag">Precursor · Self-Reflection</div>
+      <p class="tl-desc">The first self-reflecting terminal agent — before Claude Code, before OpenClaw. A system that observed its own execution trace, reasoned over it, and modified behaviour in the next step. The kernel of autonomous agency.</p>
+      <p class="tl-contrib">Core insight: <span>recursive self-observation as the minimal substrate of agency</span></p>
+    </div>
+    <div class="tl-item obs">
+      <div class="tl-dot"></div>
+      <div class="tl-year">2022–2023</div>
+      <div class="tl-name">GenWorlds</div>
+      <div class="tl-tag">Multi-Agent Coordination</div>
+      <p class="tl-desc">The first general framework for networks of autonomous LLM agents. Coordination without a central planner: shared world state, message-passing, emergent division of labour. The ancestor of every modern agent framework.</p>
+      <p class="tl-contrib">Core insight: <span>emergent coordination from local interaction rules</span></p>
+    </div>
+    <div class="tl-item obs">
+      <div class="tl-dot"></div>
+      <div class="tl-year">2023–present</div>
+      <div class="tl-name">GenLayer</div>
+      <div class="tl-tag">Flagship · Decision Infrastructure</div>
+      <p class="tl-desc">Intelligent Contracts: programs that call LLMs to resolve ambiguous predicates, verified by a decentralised validator network. The formal mathematical treatment — published with CRM (Centre de Recerca Matemàtica, UAB) — constitutes original research in probabilistic agreement theory.</p>
+      <p class="tl-contrib">Core insight: <span>subjective verification formalised as a CLT on Banach-valued random variables</span></p>
+    </div>
+    <div class="tl-item teal obs">
+      <div class="tl-dot"></div>
+      <div class="tl-year">2024</div>
+      <div class="tl-name">SubZeroClaw</div>
+      <div class="tl-tag">Kolmogorov Minimum · 54 KB</div>
+      <p class="tl-desc">A 54 KB autonomous agent runtime in C. LLMs already know Linux — therefore the minimum description length of an agentic loop is achieved by treating the shell as a native tool. One binary. One dependency. No frameworks.</p>
+      <p class="tl-contrib">Core insight: <span>$K(\text{agent}) \approx K(\text{LLM}) + K(\text{shell interface}) + O(1)$ — everything else is accidental complexity</span></p>
+    </div>
+    <div class="tl-item teal obs">
+      <div class="tl-dot"></div>
+      <div class="tl-year">2025–present</div>
+      <div class="tl-name">SubZero-SWARM &amp; Genetic Optimisation</div>
+      <div class="tl-tag">Active Research</div>
+      <p class="tl-desc">GenWorlds v2 built on the SubZeroClaw kernel. Swarm behaviour emergent from minimal agents. Genetic algorithms as a search procedure over swarm topologies — evolution as the outer optimisation loop over inner agent policies.</p>
+      <p class="tl-contrib">Core insight: <span>swarm fitness as a learnable objective; topology as a genotype</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- §2 — PUBLICATIONS -->
+<section id="publications">
+  <p class="sec-label">§4 — Publications</p>
+  <h2 class="sec-title">The Formal<br><em>Record</em></h2>
+  <p class="sec-intro">Mathematical foundations are not marketing. They are load-bearing.</p>
+  <div class="pub-list">
+    <div class="pub-item obs">
+      <div class="pub-year">2025</div>
+      <div>
+        <div class="pub-venue">Target: SIAM Journal on Computing</div>
+        <div class="pub-title">Consensus over Ambiguous Specifications: A Formal Treatment</div>
+        <div class="pub-authors">J.M. Lago &amp; Lluís Alsedà (CRM — Centre de Recerca Matemàtica, UAB)</div>
+        <div><span class="pub-tag new">Preprint</span><span class="pub-tag sub">Probability Theory</span><span class="pub-tag sub">Distributed Systems</span></div>
+        <p style="margin-top:0.5rem;font-size:0.91rem;color:var(--text-dim)">Probabilistic consensus over free monoids, CLT in Banach spaces, validator independence proofs.</p>
+      </div>
+    </div>
+    <div class="pub-item obs">
+      <div class="pub-year">2025</div>
+      <div>
+        <div class="pub-venue">Target: IEEE CSF 2026</div>
+        <div class="pub-title">Greyboxing: Adversarial Robustness in Decentralised Validator Networks</div>
+        <div class="pub-authors">GenLayer Labs</div>
+        <div><span class="pub-tag sub">Security</span><span class="pub-tag sub">Adversarial ML</span></div>
+        <p style="margin-top:0.5rem;font-size:0.91rem;color:var(--text-dim)">Formal verification that partial-knowledge adversaries cannot construct universal perturbations against independent validator ensembles. TLA+ mechanisation included.</p>
+      </div>
+    </div>
+    <div class="pub-item obs">
+      <div class="pub-year">2025</div>
+      <div>
+        <div class="pub-venue">Technical Report</div>
+        <div class="pub-title">SubZeroClaw: A 54 KB Proof of the Kolmogorov Minimum Conjecture for Autonomous Agents</div>
+        <div class="pub-authors">GenLayer Labs</div>
+        <div><span class="pub-tag new">Released</span><span class="pub-tag sub">Systems</span><span class="pub-tag sub">Complexity Theory</span></div>
+        <p style="margin-top:0.5rem;font-size:0.91rem;color:var(--text-dim)">The minimum description length of a production-capable agentic loop is achieved by a direct shell interface to a pre-trained LLM, no intermediate abstraction layers.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- §5 — ACTIVE RESEARCH -->
+<section>
+  <p class="sec-label">§5 — Active Research</p>
+  <h2 class="sec-title">Work in<br><em>Progress</em></h2>
+  <p class="sec-intro">What we are thinking about right now.</p>
+  <div class="active-grid">
+    <div class="active-card obs">
+      <div class="active-title">Genetic Swarm Topology Search</div>
+      <p class="active-body">Evolutionary optimisation over multi-agent graph structures. Genotype: adjacency matrix. Phenotype: task completion on benchmark distributions.</p>
+      <div class="active-status">In progress · 2025</div>
+    </div>
+    <div class="active-card obs">
+      <div class="active-title">ESLA — Enforceable Service Level Agreements</div>
+      <p class="active-body">On-chain verification of agent behaviour against natural-language specifications. Trustless SLAs for autonomous services built on GenLayer.</p>
+      <div class="active-status">Design phase · 2025</div>
+    </div>
+    <div class="active-card obs">
+      <div class="active-title">SubZero-SWARM</div>
+      <p class="active-body">GenWorlds v2 on the SubZeroClaw kernel. Swarm coordination from minimal agents, message-passing only, no shared memory.</p>
+      <div class="active-status">Prototype · 2025</div>
+    </div>
+    <div class="active-card obs">
+      <div class="active-title">Optimistic Democracy: TLA+ Verification</div>
+      <p class="active-body">Full mechanised formal verification of GenLayer's consensus protocol. Safety and liveness proofs under Byzantine fault assumptions.</p>
+      <div class="active-status">In review · 2025</div>
+    </div>
+    <div class="active-card obs">
+      <div class="active-title">Kolmogorov Complexity of Transformer Representations</div>
+      <p class="active-body">Lower bounds on information content of learned weight matrices. Connection to Hebbian compressibility and biological substrate translation.</p>
+      <div class="active-status">Exploratory · 2025</div>
+    </div>
+    <div class="active-card obs">
+      <div class="active-title">Rally.fun — Agent-Driven Economies</div>
+      <p class="active-body">Live deployment of Intelligent Contracts driving token marketing campaigns. Real-world stress test of the consensus layer at production scale.</p>
+      <div class="active-status">Live · ~$200K ARR</div>
+    </div>
+  </div>
+</section>
+
+<!-- §4 — TEAM -->
+<div class="team-band" id="team">
+  <div class="team-inner">
+    <p class="sec-label">§6 — The Architects</p>
+    <h2 class="sec-title">The Team</h2>
+    <p class="sec-intro obs">
+      Engineers, researchers, and builders with roots in frontier AI, L1 launches,
+      and defining new cryptographic primitives.
+    </p>
+
+    <!-- Founders -->
+    <div class="founders-list obs">
+      <div class="founder-item">
+        <div class="team-name">José María Lago</div>
+        <div class="team-role">CTO &amp; Co-Founder</div>
+      </div>
+      <div class="founder-item">
+        <div class="team-name">Albert Castellana</div>
+        <div class="team-role">CEO &amp; Co-Founder</div>
+      </div>
+      <div class="founder-item">
+        <div class="team-name">Edgars Nemše</div>
+        <div class="team-role">CPO &amp; Co-Founder</div>
+      </div>
+    </div>
+
+    <!-- Core team -->
+    <div class="team-list obs">
+      <div class="team-list-item"><span class="tl-name-text">Navi Brar</span><span class="tl-role-text">Chief Operating Officer</span></div>
+      <div class="team-list-item"><span class="tl-name-text">Afsaneh Heyat</span><span class="tl-role-text">Head of Finance</span></div>
+      <div class="team-list-item"><span class="tl-name-text">Kiril Antevski</span><span class="tl-role-text">Senior Solidity Developer</span></div>
+      <div class="team-list-item"><span class="tl-name-text">Claudio Mello</span><span class="tl-role-text">Senior Solidity Developer</span></div>
+      <div class="team-list-item"><span class="tl-name-text">Kira Prokopenko</span><span class="tl-role-text">Compiler Engineer</span></div>
+      <div class="team-list-item"><span class="tl-name-text">Darien Hernández González</span><span class="tl-role-text">Senior Blockchain Developer</span></div>
+      <div class="team-list-item"><span class="tl-name-text">Rafal Rabenda</span><span class="tl-role-text">DevOps Engineer</span></div>
+      <div class="team-list-item"><span class="tl-name-text">Daniel Julián Rojas Cruz</span><span class="tl-role-text">Senior Full Stack Developer</span></div>
+      <div class="team-list-item"><span class="tl-name-text">Araceli García</span><span class="tl-role-text">Operations &amp; Finance</span></div>
+      <div class="team-list-item"><span class="tl-name-text">Ana María Mahecha</span><span class="tl-role-text">Business Development</span></div>
+      <div class="team-list-item"><span class="tl-name-text">Luciano Pieroni</span><span class="tl-role-text">Head of Socials</span></div>
+      <div class="team-list-item"><span class="tl-name-text">Burak 'Rahil' Aydın</span><span class="tl-role-text">Head of Growth</span></div>
+    </div>
+    <div class="alumni-strip">
+      <div class="alumni-label obs">Team alumni of</div>
+      <div class="alumni-logos obs">
+        <img src="https://cdn.prod.website-files.com/6841451e44fce45f158da8f3/6841eecb12506d14d598a72f_ethfoundation.svg" alt="Ethereum Foundation">
+        <img src="https://cdn.prod.website-files.com/6841451e44fce45f158da8f3/6841eed3f24fc1f5d9208f80_jpmorgan.svg" alt="JPMorgan">
+        <img src="https://cdn.prod.website-files.com/6841451e44fce45f158da8f3/6841ee17d9aafe194e584489_paypal.svg" alt="PayPal">
+        <img src="https://cdn.prod.website-files.com/6841451e44fce45f158da8f3/6841ee0048ce1112fe2b3976_ey.svg" alt="EY">
+        <img src="https://cdn.prod.website-files.com/6841451e44fce45f158da8f3/6841ede43a5a5b35d2323c6d_teza.svg" alt="Teza">
+        <img src="https://cdn.prod.website-files.com/6841451e44fce45f158da8f3/6841ee942c7737003a99f4e1_quant.svg" alt="Quant">
+        <img src="https://cdn.prod.website-files.com/6841451e44fce45f158da8f3/6841eea63031b6952b677208_cisco.svg" alt="Cisco">
+        <img src="https://cdn.prod.website-files.com/6841451e44fce45f158da8f3/6841ef0e43db9fe5eac686ab_polygon.svg" alt="Polygon">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">
+    <svg width="20" height="19"><use href="#gl-mark" fill="#8a6a2e"/></svg>
+    <span class="footer-wordmark">GENLAYER LABS</span>
+  </div>
+  <ul class="footer-links">
+    <li><a href="#">Papers</a></li>
+    <li><a href="https://github.com/genlayerlabs">GitHub</a></li>
+    <li><a href="https://genlayer.com">genlayer.com</a></li>
+    <li><a href="https://discord.gg/genlayerlabs">Discord</a></li>
+    <li><a href="https://x.com/GenLayer">X / Twitter</a></li>
+  </ul>
+  <div class="footer-copy">© 2025 GenLayer Labs</div>
+</footer>
+
+</main>
+
+<script>
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08 });
+document.querySelectorAll('.obs,.tl-item,.pub-item,.team-card,.ahead-col,.ahead-quote').forEach(el => io.observe(el));
+window.addEventListener('load', () => { if(window.MathJax) MathJax.typeset(); });
+</script>
+</body>
+</html>

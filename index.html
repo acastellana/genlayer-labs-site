@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GenLayer Labs</title>
+<meta name="description" content="GenLayer Labs — landing pages directory.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:       #f8f6f1;
+  --bg2:      #f1ede4;
+  --surface:  #ffffff;
+  --border:   rgba(40, 30, 15, 0.10);
+  --border2:  rgba(40, 30, 15, 0.055);
+  --text:     #1a1812;
+  --text-dim: rgba(26, 24, 18, 0.52);
+  --text-mute:rgba(26, 24, 18, 0.28);
+  --gold:     #8a6a2e;
+  --gold-bg:  rgba(138, 106, 46, 0.06);
+  --gold-bdr: rgba(138, 106, 46, 0.16);
+  --font-serif: 'EB Garamond', Georgia, 'Times New Roman', serif;
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { -webkit-font-smoothing: antialiased; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-serif);
+  font-size: 1.06rem;
+  line-height: 1.78;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+a { color: inherit; text-decoration: none; }
+
+/* ── LAYOUT ── */
+.container {
+  max-width: 700px;
+  width: 100%;
+  padding: 4rem 2rem;
+}
+
+/* ── HEADER ── */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-bottom: 3.5rem;
+}
+.header svg { height: 28px; width: auto; }
+.header-wordmark {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text);
+  font-weight: 400;
+}
+
+/* ── TABLE ── */
+.directory {
+  width: 100%;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-collapse: separate;
+  border-spacing: 0;
+}
+.directory thead th {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-mute);
+  text-align: left;
+  padding: 0.8rem 1.4rem;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  font-weight: 400;
+}
+.directory thead th:last-child {
+  text-align: right;
+}
+.directory tbody tr {
+  transition: background 0.15s;
+  cursor: pointer;
+}
+.directory tbody tr:hover {
+  background: var(--gold-bg);
+}
+.directory tbody td {
+  padding: 1rem 1.4rem;
+  border-bottom: 1px solid var(--border2);
+  vertical-align: baseline;
+}
+.directory tbody tr:last-child td {
+  border-bottom: none;
+}
+.dir-name {
+  font-family: var(--font-display);
+  font-size: 1.28rem;
+  font-weight: 600;
+  color: var(--text);
+  transition: color 0.2s;
+}
+tr:hover .dir-name {
+  color: var(--gold);
+}
+.dir-desc {
+  font-size: 0.92rem;
+  color: var(--text-dim);
+  line-height: 1.55;
+}
+.dir-date {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--text-mute);
+  letter-spacing: 0.04em;
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* ── FOOTER ── */
+.footer {
+  margin-top: 3.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  color: var(--text-mute);
+  letter-spacing: 0.04em;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 600px) {
+  .container { padding: 2rem 1.2rem; }
+  .directory thead th,
+  .directory tbody td { padding: 0.7rem 1rem; }
+  .dir-name { font-size: 1.12rem; }
+  .dir-desc { font-size: 0.85rem; }
+  .dir-date { font-size: 0.55rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- INLINE SVG LOGO -->
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="gl-mark" viewBox="0 0 97.76 91.93">
+    <polygon points="44.26 32.35 27.72 67.12 43.29 74.9 0 91.93 44.26 0 44.26 32.35"/>
+    <polygon points="53.5 32.35 70.04 67.12 54.47 74.9 97.76 91.93 53.5 0 53.5 32.35"/>
+    <polygon points="48.64 43.78 58.33 62.94 48.64 67.69 39.47 62.92 48.64 43.78" opacity="0.7"/>
+  </symbol>
+</svg>
+
+<div class="container">
+
+  <div class="header">
+    <svg width="28" height="26"><use href="#gl-mark" fill="#8a6a2e"/></svg>
+    <span class="header-wordmark">GenLayer Labs</span>
+  </div>
+
+  <table class="directory">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Created</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr onclick="window.location='/labs-v2/'">
+        <td><span class="dir-name">Labs-v2</span></td>
+        <td><span class="dir-desc">VC-sharpened: control point narrative with economic proof</span></td>
+        <td><span class="dir-date">26 Mar 2026</span></td>
+      </tr>
+      <tr onclick="window.location='/labs/'">
+        <td><span class="dir-name">Labs</span></td>
+        <td><span class="dir-desc">Judgment infrastructure for autonomous commerce</span></td>
+        <td><span class="dir-date">26 Mar 2026</span></td>
+      </tr>
+      <tr onclick="window.location='/jm-original/'">
+        <td><span class="dir-name">JM-original</span></td>
+        <td><span class="dir-desc">Original v3 landing page by JM</span></td>
+        <td><span class="dir-date">26 Mar 2026</span></td>
+      </tr>
+      <tr onclick="window.location='/jm-phylogenesis/'">
+        <td><span class="dir-name">JM-phylogenesis</span></td>
+        <td><span class="dir-desc">The Agentic Economy Proof — Phylogenesis thesis</span></td>
+        <td><span class="dir-date">26 Mar 2026</span></td>
+      </tr>
+      <tr onclick="window.location='/openai-vc/'">
+        <td><span class="dir-name">OpenAI-VC</span></td>
+        <td><span class="dir-desc">What OpenAI thinks is best for AI VCs</span></td>
+        <td><span class="dir-date">26 Mar 2026</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="footer">&copy; 2026 GenLayer Labs</div>
+
+</div>
+
+</body>
+</html>

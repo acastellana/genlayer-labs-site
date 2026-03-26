@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GenLayer Labs — Judgment Infrastructure for Autonomous Commerce</title>
+<meta name="description" content="We run real agent economies and build the infrastructure they require to function. GenLayer is the programmable judgment layer for autonomous commerce.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════
+   DESIGN TOKENS
+   ═══════════════════════════════════════════ */
+:root {
+  --bg:       #f8f6f1;
+  --bg2:      #f1ede4;
+  --bg3:      #e9e3d8;
+  --surface:  #ffffff;
+  --border:   rgba(40, 30, 15, 0.10);
+  --border2:  rgba(40, 30, 15, 0.055);
+  --text:     #1a1812;
+  --text-dim: rgba(26, 24, 18, 0.52);
+  --text-mute:rgba(26, 24, 18, 0.28);
+  --gold:     #8a6a2e;
+  --gold-light:#b8924c;
+  --gold-bg:  rgba(138, 106, 46, 0.06);
+  --gold-bdr: rgba(138, 106, 46, 0.16);
+  --teal:     #2a6b78;
+  --teal-bg:  rgba(42, 107, 120, 0.06);
+  --teal-bdr: rgba(42, 107, 120, 0.16);
+  --red:      #8a2e2e;
+  --red-bg:   rgba(138, 46, 46, 0.06);
+  --red-bdr:  rgba(138, 46, 46, 0.14);
+
+  --font-serif: 'EB Garamond', Georgia, 'Times New Roman', serif;
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+}
+
+/* ═══════════════════════════════════════════
+   RESET & BASE
+   ═══════════════════════════════════════════ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-serif);
+  font-size: 1.06rem;
+  line-height: 1.78;
+  overflow-x: hidden;
+}
+/* Paper texture — subtle, non-blocking */
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; display: block; }
+main { position: relative; }
+
+/* ═══════════════════════════════════════════
+   NAVIGATION
+   ═══════════════════════════════════════════ */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  padding: 0 4rem;
+  height: 3.6rem;
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(248, 246, 241, 0.92);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border2);
+}
+.nav-logo {
+  display: flex; align-items: center; gap: 0.65rem;
+  text-decoration: none;
+}
+.nav-logo svg { height: 26px; width: auto; }
+.nav-wordmark {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text);
+  font-weight: 400;
+}
+.nav-links {
+  display: flex; gap: 2.2rem;
+  list-style: none;
+}
+.nav-links a {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--text); }
+
+/* ═══════════════════════════════════════════
+   HERO
+   ═══════════════════════════════════════════ */
+.hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  justify-content: center;
+  position: relative; overflow: hidden;
+}
+.hero-inner {
+  max-width: 880px; width: 100%;
+  margin: 0 auto;
+  padding: 8rem 4rem 5rem;
+}
+.hero-label {
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 2.4rem;
+  opacity: 0; animation: fadeUp 0.7s 0.15s forwards;
+}
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.6rem, 5.5vw, 4.8rem);
+  font-weight: 400;
+  line-height: 1.06;
+  letter-spacing: -0.015em;
+  color: var(--text);
+  margin-bottom: 2rem;
+  opacity: 0; animation: fadeUp 0.7s 0.3s forwards;
+}
+.hero-title em {
+  font-style: italic;
+  color: var(--gold);
+}
+.hero-anchor {
+  font-size: 1.18rem;
+  color: var(--text-dim);
+  max-width: 560px;
+  line-height: 1.72;
+  margin-bottom: 1.2rem;
+  opacity: 0; animation: fadeUp 0.7s 0.45s forwards;
+}
+.hero-anchor strong {
+  color: var(--text);
+  font-weight: 500;
+}
+.hero-clarity {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-mute);
+  max-width: 580px;
+  line-height: 1.8;
+  letter-spacing: 0.01em;
+  opacity: 0; animation: fadeUp 0.7s 0.6s forwards;
+}
+.hero-wm {
+  position: absolute; right: -2rem; top: 50%;
+  transform: translateY(-50%);
+  opacity: 0; pointer-events: none;
+  animation: fadeUp 1.2s 0.85s forwards;
+}
+.hero-wm svg { width: 420px; height: auto; opacity: 0.035; }
+.hero-scroll {
+  position: absolute; bottom: 2.5rem; left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-mono);
+  font-size: 0.5rem; letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--text-mute);
+  opacity: 0; animation: fadeUp 0.6s 1.2s forwards;
+  text-align: center;
+}
+.hero-scroll::after {
+  content: ''; display: block;
+  width: 1px; height: 36px;
+  background: linear-gradient(to bottom, var(--text-mute), transparent);
+  margin: 0.5rem auto 0;
+}
+
+/* ═══════════════════════════════════════════
+   COMMON
+   ═══════════════════════════════════════════ */
+.section {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 6rem 2rem;
+}
+.band {
+  background: var(--bg2);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 6rem 2rem;
+}
+.band-inner { max-width: 880px; margin: 0 auto; }
+.sec-label {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 0.5rem;
+}
+.sec-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.85rem, 3.5vw, 2.8rem);
+  font-weight: 400;
+  line-height: 1.1;
+  margin-bottom: 0.6rem;
+  color: var(--text);
+}
+.sec-title em { font-style: italic; color: var(--gold); }
+.sec-intro {
+  color: var(--text-dim);
+  max-width: 580px;
+  font-size: 1.02rem;
+  line-height: 1.78;
+}
+.sec-body {
+  color: var(--text-dim);
+  max-width: 620px;
+  font-size: 1.02rem;
+  line-height: 1.82;
+  margin-top: 1.8rem;
+}
+.sec-body + .sec-body { margin-top: 1.1rem; }
+
+/* ═══════════════════════════════════════════
+   PULL QUOTE
+   ═══════════════════════════════════════════ */
+.pull-quote {
+  margin: 3.5rem 0;
+  padding: 2.2rem 0 2.2rem 2rem;
+  border-left: 2px solid var(--gold);
+}
+.pull-quote blockquote {
+  font-family: var(--font-display);
+  font-size: clamp(1.35rem, 2.5vw, 1.9rem);
+  font-weight: 400;
+  font-style: italic;
+  color: var(--text);
+  line-height: 1.38;
+  max-width: 600px;
+}
+
+/* ═══════════════════════════════════════════
+   DEPENDENCY CHAIN (§2 vertical diagram)
+   ═══════════════════════════════════════════ */
+.chain {
+  position: relative;
+  padding-left: 3.2rem;
+  margin-top: 3rem;
+}
+.chain::before {
+  content: '';
+  position: absolute; left: 0.85rem; top: 0.6rem; bottom: 0.6rem;
+  width: 1px;
+  background: linear-gradient(to bottom, var(--gold-bdr), var(--red-bdr), var(--teal-bdr));
+}
+.chain-step {
+  position: relative;
+  padding: 0 0 2.5rem 0;
+}
+.chain-step:last-child { padding-bottom: 0; }
+.chain-dot {
+  position: absolute;
+  left: -3.2rem; top: 0.15rem;
+  width: 1.7rem; height: 1.7rem;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 0.52rem;
+  font-weight: 500;
+  color: var(--gold);
+  border: 1px solid var(--gold-bdr);
+  background: var(--bg);
+}
+.chain-step.fail .chain-dot {
+  color: var(--red);
+  border-color: var(--red-bdr);
+}
+.chain-step.resolve .chain-dot {
+  color: var(--teal);
+  border-color: var(--teal-bdr);
+}
+.chain-arrow {
+  position: absolute;
+  left: -2.35rem; bottom: 0.3rem;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--text-mute);
+  line-height: 1;
+}
+.chain-title {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.3rem;
+  line-height: 1.2;
+}
+.chain-body {
+  font-size: 0.92rem;
+  color: var(--text-dim);
+  line-height: 1.68;
+  max-width: 520px;
+}
+
+/* ═══════════════════════════════════════════
+   STACK DIAGRAM (§3)
+   ═══════════════════════════════════════════ */
+.stack-diagram {
+  margin: 3rem 0;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  overflow: hidden;
+}
+.stack-row {
+  display: grid;
+  grid-template-columns: 8rem 1fr;
+  border-bottom: 1px solid var(--border);
+}
+.stack-row:last-child { border-bottom: none; }
+.stack-label {
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-mute);
+  padding: 1.1rem 1.2rem;
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  display: flex; align-items: center;
+}
+.stack-content {
+  padding: 1.1rem 1.4rem;
+  display: flex; align-items: center;
+}
+.stack-content-text {
+  font-size: 0.95rem;
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+.stack-row.highlight {
+  background: var(--gold-bg);
+}
+.stack-row.highlight .stack-label {
+  color: var(--gold);
+  background: rgba(138, 106, 46, 0.08);
+}
+.stack-row.highlight .stack-content-text {
+  color: var(--text);
+  font-weight: 500;
+}
+.stack-tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.12rem 0.45rem;
+  margin-left: 0.6rem;
+  color: var(--gold);
+  border: 1px solid var(--gold-bdr);
+  background: var(--gold-bg);
+}
+
+/* ═══════════════════════════════════════════
+   APPLICATIONS (§4)
+   ═══════════════════════════════════════════ */
+.app-card {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  padding: 2.2rem 2rem;
+  margin-bottom: 1rem;
+  position: relative;
+}
+.app-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--gold), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.app-card:hover::before { opacity: 1; }
+.app-name {
+  font-family: var(--font-display);
+  font-size: 1.55rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.15rem;
+  line-height: 1.2;
+}
+.app-domain {
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-mute);
+  margin-bottom: 1.2rem;
+}
+.app-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.2rem 2.5rem;
+}
+.app-field-label {
+  font-family: var(--font-mono);
+  font-size: 0.53rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  margin-bottom: 0.3rem;
+}
+.app-field-label.amber { color: var(--gold); }
+.app-field-label.red { color: var(--red); }
+.app-field-label.teal { color: var(--teal); }
+.app-field-body {
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  line-height: 1.65;
+}
+.app-proves {
+  grid-column: 1 / -1;
+  margin-top: 0.6rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border2);
+}
+.app-proves-label {
+  font-family: var(--font-mono);
+  font-size: 0.53rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--teal);
+  margin-bottom: 0.3rem;
+}
+.app-proves-body {
+  font-size: 0.95rem;
+  color: var(--text);
+  line-height: 1.65;
+  font-style: italic;
+}
+
+/* Constraint repetition visual */
+.constraint-visual {
+  margin: 2.5rem 0 0;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  overflow: hidden;
+}
+.cv-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+}
+.cv-row:last-child { border-bottom: none; }
+.cv-cell {
+  padding: 1rem 0.8rem;
+  border-right: 1px solid var(--border);
+  font-size: 0.88rem;
+  color: var(--text-dim);
+}
+.cv-cell:last-child { border-right: none; }
+.cv-cell.head {
+  font-family: var(--font-mono);
+  font-size: 0.54rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-mute);
+  background: var(--bg2);
+}
+.cv-cell.name {
+  font-family: var(--font-display);
+  font-size: 1.08rem;
+  font-weight: 600;
+  color: var(--text);
+}
+.cv-cell.same {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.05em;
+  color: var(--gold);
+  background: var(--gold-bg);
+}
+.cv-conclusion {
+  padding: 1.1rem 1.5rem;
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-style: italic;
+  color: var(--text);
+  background: var(--gold-bg);
+}
+
+/* ═══════════════════════════════════════════
+   DERIVATION TIMELINE (§5)
+   ═══════════════════════════════════════════ */
+.timeline { position: relative; padding-left: 2rem; margin-top: 2.5rem; }
+.timeline::before {
+  content: '';
+  position: absolute; left: 0; top: 0.4rem; bottom: 0;
+  width: 1px;
+  background: linear-gradient(to bottom, var(--gold-bdr), var(--teal-bdr), transparent);
+}
+.tl-item {
+  position: relative;
+  padding: 0 0 2.8rem 2.5rem;
+}
+.tl-item:last-child { padding-bottom: 0; }
+.tl-dot {
+  position: absolute; left: -2rem; top: 0.4rem;
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--gold);
+  border: 2px solid var(--bg);
+  box-shadow: 0 0 0 1px var(--gold-bdr);
+}
+.tl-item.teal .tl-dot {
+  background: var(--teal);
+  box-shadow: 0 0 0 1px var(--teal-bdr);
+}
+.tl-phase {
+  font-family: var(--font-mono);
+  font-size: 0.57rem;
+  color: var(--text-mute);
+  letter-spacing: 0.07em;
+  margin-bottom: 0.15rem;
+}
+.tl-name {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.2rem;
+}
+.tl-tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.52rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gold);
+  border: 1px solid var(--gold-bdr);
+  background: var(--gold-bg);
+  padding: 0.08rem 0.42rem;
+  margin-bottom: 0.45rem;
+}
+.tl-item.teal .tl-tag {
+  color: var(--teal);
+  border-color: var(--teal-bdr);
+  background: var(--teal-bg);
+}
+.tl-desc {
+  font-size: 0.95rem;
+  color: var(--text-dim);
+  max-width: 540px;
+  line-height: 1.7;
+}
+.tl-learned {
+  margin-top: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.63rem;
+  color: var(--text-mute);
+}
+.tl-learned span { color: var(--gold); }
+.tl-item.teal .tl-learned span { color: var(--teal); }
+
+/* ═══════════════════════════════════════════
+   PUBLICATIONS (§6 — compressed)
+   ═══════════════════════════════════════════ */
+.pub-list { margin-top: 1.8rem; }
+.pub-item {
+  display: grid;
+  grid-template-columns: 3rem 1fr;
+  gap: 1.2rem;
+  padding: 1.4rem 0;
+  border-top: 1px solid var(--border2);
+}
+.pub-year {
+  font-family: var(--font-mono);
+  font-size: 0.61rem;
+  color: var(--gold);
+  padding-top: 0.1rem;
+}
+.pub-venue {
+  font-family: var(--font-mono);
+  font-size: 0.54rem;
+  letter-spacing: 0.06em;
+  color: var(--text-mute);
+  text-transform: uppercase;
+  margin-bottom: 0.2rem;
+}
+.pub-title {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-style: italic;
+  color: var(--text);
+  line-height: 1.3;
+  margin-bottom: 0.2rem;
+}
+.pub-authors {
+  font-size: 0.84rem;
+  color: var(--text-dim);
+}
+
+/* ═══════════════════════════════════════════
+   TEAM (§7)
+   ═══════════════════════════════════════════ */
+.team-band {
+  padding: 6rem 2rem;
+  border-top: 1px solid var(--border2);
+}
+.team-inner { max-width: 880px; margin: 0 auto; }
+
+.founders-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  border: 1px solid var(--border);
+  overflow: hidden;
+  background: var(--surface);
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+.founder-item {
+  padding: 1.7rem 1.6rem 1.5rem;
+  border-right: 1px solid var(--border);
+}
+.founder-item:last-child { border-right: none; }
+.founder-name {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.2;
+  margin-bottom: 0.15rem;
+}
+.founder-role {
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.team-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border: 1px solid var(--border);
+  overflow: hidden;
+  background: var(--surface);
+}
+.team-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 0.75rem 1.3rem;
+  border-bottom: 1px solid var(--border2);
+  border-right: 1px solid var(--border2);
+  transition: background 0.15s;
+}
+.team-list-item:nth-child(even) { border-right: none; }
+.team-list-item:nth-last-child(-n+2) { border-bottom: none; }
+.team-list-item:hover { background: var(--bg2); }
+.tli-name {
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  color: var(--text);
+  font-weight: 500;
+}
+.tli-role {
+  font-family: var(--font-mono);
+  font-size: 0.54rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-mute);
+  text-align: right;
+  padding-left: 0.8rem;
+}
+
+.alumni-strip {
+  padding: 2.5rem 2rem;
+  text-align: center;
+}
+.alumni-label {
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+  letter-spacing: 0.15em;
+  color: var(--text-mute);
+  text-transform: uppercase;
+  margin-bottom: 1.3rem;
+}
+.alumni-logos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem 2.4rem;
+  justify-content: center;
+  align-items: center;
+}
+.alumni-logos img {
+  height: 24px; width: auto;
+  filter: grayscale(100%) opacity(0.35);
+  transition: filter 0.2s;
+}
+.alumni-logos img:hover { filter: grayscale(40%) opacity(0.65); }
+
+/* ═══════════════════════════════════════════
+   CTA / CLOSE (§8)
+   ═══════════════════════════════════════════ */
+.close-band {
+  background: var(--bg2);
+  border-top: 1px solid var(--border);
+  padding: 6rem 2rem;
+  text-align: center;
+}
+.close-inner {
+  max-width: 620px;
+  margin: 0 auto;
+}
+.close-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 3.5vw, 3rem);
+  font-weight: 400;
+  font-style: italic;
+  line-height: 1.15;
+  color: var(--text);
+  margin-bottom: 1.5rem;
+}
+.close-body {
+  font-size: 1.04rem;
+  color: var(--text-dim);
+  line-height: 1.8;
+  margin-bottom: 0.8rem;
+}
+.close-anchor {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--gold);
+  margin-top: 1.5rem;
+}
+
+/* ═══════════════════════════════════════════
+   FOOTER
+   ═══════════════════════════════════════════ */
+footer {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 2.5rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--border2);
+}
+.footer-logo {
+  display: flex; align-items: center; gap: 0.6rem;
+}
+.footer-logo svg { height: 22px; }
+.footer-wordmark {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--text);
+  letter-spacing: 0.13em;
+}
+.footer-links {
+  display: flex; gap: 1.5rem;
+  list-style: none;
+}
+.footer-links a {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--text-mute);
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  transition: color 0.2s;
+}
+.footer-links a:hover { color: var(--text); }
+.footer-copy {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--text-mute);
+}
+
+/* ═══════════════════════════════════════════
+   UTILITIES
+   ═══════════════════════════════════════════ */
+.rule-label {
+  display: flex; align-items: center; gap: 1rem;
+  margin: 2.5rem 0 1.5rem;
+}
+.rule-label span {
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  color: var(--text-mute);
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.rule-label::before,
+.rule-label::after {
+  content: ''; flex: 1; height: 1px;
+  background: var(--border2);
+}
+.mt-sm { margin-top: 1.5rem; }
+
+/* ═══════════════════════════════════════════
+   ANIMATIONS
+   ═══════════════════════════════════════════ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+/* No-JS fallback: show everything if JS disabled */
+.obs {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.55s ease, transform 0.55s ease;
+}
+.obs.visible { opacity: 1; transform: none; }
+html.no-js .obs { opacity: 1; transform: none; }
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════ */
+@media (max-width: 768px) {
+  nav { padding: 0 1.5rem; }
+  .nav-links { display: none; }
+  .hero-inner { padding: 6rem 1.5rem 3rem; }
+  .hero-wm { display: none; }
+  .section { padding: 4rem 1.5rem; }
+  .band, .close-band, .team-band { padding: 4rem 1.5rem; }
+  .app-grid { grid-template-columns: 1fr; }
+  .founders-list { grid-template-columns: 1fr; }
+  .founder-item { border-right: none; border-bottom: 1px solid var(--border); }
+  .founder-item:last-child { border-bottom: none; }
+  .team-list { grid-template-columns: 1fr; }
+  .team-list-item { border-right: none !important; }
+  .team-list-item:nth-last-child(-n+2) { border-bottom: 1px solid var(--border2); }
+  .team-list-item:last-child { border-bottom: none; }
+  .cv-row { grid-template-columns: 1fr; }
+  .cv-cell { border-right: none; border-bottom: 1px solid var(--border); }
+  .cv-cell:last-child { border-bottom: none; }
+  .stack-row { grid-template-columns: 6rem 1fr; }
+  footer { flex-direction: column; gap: 1.2rem; text-align: center; }
+  .footer-links { flex-wrap: wrap; justify-content: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- INLINE SVG DEFS -->
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="gl-mark" viewBox="0 0 97.76 91.93">
+    <polygon points="44.26 32.35 27.72 67.12 43.29 74.9 0 91.93 44.26 0 44.26 32.35"/>
+    <polygon points="53.5 32.35 70.04 67.12 54.47 74.9 97.76 91.93 53.5 0 53.5 32.35"/>
+    <polygon points="48.64 43.78 58.33 62.94 48.64 67.69 39.47 62.92 48.64 43.78" opacity="0.7"/>
+  </symbol>
+</svg>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">
+    <svg width="22" height="21"><use href="#gl-mark" fill="#8a6a2e"/></svg>
+    <span class="nav-wordmark">GenLayer Labs</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#what-breaks">The Problem</a></li>
+    <li><a href="#how-we-work">How We Work</a></li>
+    <li><a href="#genlayer">GenLayer</a></li>
+    <li><a href="#applications">Applications</a></li>
+    <li><a href="#derivation">Derivation</a></li>
+    <li><a href="#team">Team</a></li>
+  </ul>
+</nav>
+
+<main>
+
+<!-- ═══════════════════════════════════════════════
+     HERO
+     ═══════════════════════════════════════════════ -->
+<div class="hero">
+  <div class="hero-inner">
+    <p class="hero-label">GenLayer Labs</p>
+    <h1 class="hero-title">
+      Commerce cannot be<br>
+      designed for the agent era.<br>
+      <em>It must be discovered.</em>
+    </h1>
+    <p class="hero-anchor">
+      We run real agent economies and build the <strong>infrastructure they require to function.</strong>
+    </p>
+    <p class="hero-clarity">
+      GenLayer Labs operates experimental economic systems to discover the structural constraints of autonomous commerce &mdash; and deploys the primitives that capture them.
+    </p>
+  </div>
+  <div class="hero-wm" aria-hidden="true">
+    <svg width="420" height="390" viewBox="0 0 97.76 91.93" xmlns="http://www.w3.org/2000/svg">
+      <use href="#gl-mark" fill="#1a1812"/>
+    </svg>
+  </div>
+  <div class="hero-scroll">scroll</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     §1 — WHAT BREAKS
+     ═══════════════════════════════════════════════ -->
+<div class="section" id="what-breaks">
+  <p class="sec-label obs">&sect;1 &mdash; What Breaks</p>
+  <h2 class="sec-title obs">Commerce breaks<br>at <em>ambiguity.</em></h2>
+
+  <p class="sec-body obs">
+    Every layer of commerce assumes a human is on the other side. Contracts are written in natural language because humans need to read them. Courts exist because humans need someone to appeal to. Trust is built through reputation because humans remember faces.
+  </p>
+  <p class="sec-body obs">
+    When the counterparty is an autonomous agent, none of this works.
+  </p>
+  <p class="sec-body obs">
+    Agents can already transact. They can already negotiate. Payment infrastructure exists. But the moment a contract is ambiguous &mdash; the moment two agents disagree about whether an obligation was met &mdash; there is no system to resolve it.
+  </p>
+
+  <div class="pull-quote obs">
+    <blockquote>
+      Autonomous commerce fails at the moment ambiguity enters the transaction.
+    </blockquote>
+  </div>
+
+  <p class="sec-body obs">
+    The legal system is too slow. Arbitration is too expensive. Traditional smart contracts can execute deterministic code, but they cannot interpret intent, evaluate subjective claims, or make judgment calls. The entire trust layer of global commerce has no answer for ambiguity at machine scale.
+  </p>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     §2 — HOW WE WORK
+     ═══════════════════════════════════════════════ -->
+<div class="band" id="how-we-work">
+  <div class="band-inner">
+    <p class="sec-label obs">&sect;2 &mdash; How We Work</p>
+    <h2 class="sec-title obs">We don&rsquo;t study the future.<br><em>We run it.</em></h2>
+
+    <p class="sec-body obs">
+      GenLayer Labs is not a research organization that observes from a distance. It is an experimental system that operates entire economies and extracts the constraints they reveal.
+    </p>
+
+    <div class="chain obs">
+      <div class="chain-step">
+        <div class="chain-dot">1</div>
+        <div class="chain-title">Agents act</div>
+        <p class="chain-body">Autonomous agents enter economic environments as actors &mdash; negotiating, transacting, fulfilling obligations.</p>
+        <span class="chain-arrow">&darr;</span>
+      </div>
+      <div class="chain-step">
+        <div class="chain-dot">2</div>
+        <div class="chain-title">Agents coordinate</div>
+        <p class="chain-body">Without central authority, agents must reach agreement on terms, form coalitions, and divide labor.</p>
+        <span class="chain-arrow">&darr;</span>
+      </div>
+      <div class="chain-step fail">
+        <div class="chain-dot">3</div>
+        <div class="chain-title">Coordination creates disagreement</div>
+        <p class="chain-body">Ambiguous terms, subjective deliverables, unverifiable claims. Disagreement is not an edge case &mdash; it is the default.</p>
+        <span class="chain-arrow">&darr;</span>
+      </div>
+      <div class="chain-step fail">
+        <div class="chain-dot">4</div>
+        <div class="chain-title">Disagreement creates failure</div>
+        <p class="chain-body">Without resolution, commerce halts. Trust collapses. Value cannot flow.</p>
+        <span class="chain-arrow">&darr;</span>
+      </div>
+      <div class="chain-step resolve">
+        <div class="chain-dot">5</div>
+        <div class="chain-title">Failure reveals the missing primitive</div>
+        <p class="chain-body">The same structural gap appears every time: there is no system for trustless judgment.</p>
+      </div>
+    </div>
+
+    <p class="sec-body obs" style="margin-top:2.5rem;">
+      This is a machine that produces insight &mdash; not a list of research areas. Every economy we run exposes the same constraint from a different angle. The constraint is always judgment.
+    </p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     §3 — THE PRIMITIVE (GENLAYER)
+     ═══════════════════════════════════════════════ -->
+<div class="section" id="genlayer">
+  <p class="sec-label obs">&sect;3 &mdash; GenLayer</p>
+  <h2 class="sec-title obs">GenLayer was not designed.<br><em>It was discovered.</em></h2>
+
+  <p class="sec-body obs">
+    Running agent economies at scale, the same failure appears everywhere. Agents transact. They disagree. There is no resolution. Commerce stops.
+  </p>
+  <p class="sec-body obs">
+    No existing system can resolve subjective disputes between autonomous agents. Courts are too slow and jurisdictionally fragmented. Smart contracts are deterministic &mdash; they cannot interpret intent. Oracles relay data but cannot make judgment calls.
+  </p>
+  <p class="sec-body obs">
+    GenLayer is the protocol that fills this structural gap. It is a decentralized network where programs &mdash; Intelligent Contracts &mdash; process natural language, access the open web, and resolve ambiguous predicates through multi-model consensus. Multiple validator nodes, each running a different large language model, independently evaluate the same question. Agreement across independent models is a fundamentally stronger signal than any single model&rsquo;s opinion.
+  </p>
+
+  <div class="pull-quote obs">
+    <blockquote>GenLayer is the programmable judgment layer.</blockquote>
+  </div>
+
+  <!-- Commerce Stack Diagram -->
+  <div class="stack-diagram obs">
+    <div class="stack-row">
+      <div class="stack-label">Application</div>
+      <div class="stack-content">
+        <span class="stack-content-text">Agent UIs, wallets, dashboards</span>
+      </div>
+    </div>
+    <div class="stack-row">
+      <div class="stack-label">Commerce</div>
+      <div class="stack-content">
+        <span class="stack-content-text">Payments, order routing, fulfillment</span>
+      </div>
+    </div>
+    <div class="stack-row highlight">
+      <div class="stack-label">Judgment</div>
+      <div class="stack-content">
+        <span class="stack-content-text">Dispute resolution, subjective verification, intent interpretation</span>
+        <span class="stack-tag">GenLayer</span>
+      </div>
+    </div>
+    <div class="stack-row">
+      <div class="stack-label">Consensus</div>
+      <div class="stack-content">
+        <span class="stack-content-text">Block production, transaction ordering, finality</span>
+      </div>
+    </div>
+    <div class="stack-row">
+      <div class="stack-label">Network</div>
+      <div class="stack-content">
+        <span class="stack-content-text">Peer discovery, message propagation, data availability</span>
+      </div>
+    </div>
+  </div>
+
+  <p class="sec-body obs" style="margin-top:2.5rem;">
+    This is not optional infrastructure. Autonomous commerce cannot function without a system for resolving ambiguity. Every agent transaction that involves subjective terms &mdash; and most of them do &mdash; requires judgment. GenLayer is where that judgment happens. It is the layer where value concentrates because it is the layer nothing else can bypass.
+  </p>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     §4 — APPLICATIONS (THE EVIDENCE)
+     ═══════════════════════════════════════════════ -->
+<div class="band" id="applications">
+  <div class="band-inner">
+    <p class="sec-label obs">&sect;4 &mdash; Applications</p>
+    <h2 class="sec-title obs">Same constraint. Same primitive.<br><em>Different markets.</em></h2>
+    <p class="sec-intro obs">
+      Each application is evidence that the same structural constraint &mdash; the need for trustless judgment &mdash; appears independently across different domains of commerce.
+    </p>
+
+    <div style="margin-top:2.5rem;">
+      <!-- Internet Court -->
+      <div class="app-card obs">
+        <div class="app-name">Internet Court</div>
+        <div class="app-domain">General agent-to-agent agreements</div>
+        <div class="app-grid">
+          <div>
+            <div class="app-field-label amber">Where ambiguity exists</div>
+            <p class="app-field-body">Two agents form a contract. They disagree on whether the terms were met.</p>
+          </div>
+          <div>
+            <div class="app-field-label red">Why old systems fail</div>
+            <p class="app-field-body">No court has jurisdiction over software agents. Arbitration takes months and requires humans. There is no programmatic resolution path.</p>
+          </div>
+          <div class="app-proves">
+            <div class="app-field-label teal">What GenLayer does</div>
+            <p class="app-field-body">An AI jury of validators &mdash; each running a different language model &mdash; evaluates evidence against the contract&rsquo;s guidelines and delivers a verdict. Minutes, not months.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Rally -->
+      <div class="app-card obs">
+        <div class="app-name">Rally</div>
+        <div class="app-domain">Marketing fulfillment</div>
+        <div class="app-grid">
+          <div>
+            <div class="app-field-label amber">Where ambiguity exists</div>
+            <p class="app-field-body">Did the creator actually post? Was the engagement real? Did the content meet the campaign terms?</p>
+          </div>
+          <div>
+            <div class="app-field-label red">Why old systems fail</div>
+            <p class="app-field-body">Traditional influencer marketing requires human account managers to verify subjective deliverables. Every campaign is a potential dispute.</p>
+          </div>
+          <div class="app-proves">
+            <div class="app-field-label teal">What GenLayer does</div>
+            <p class="app-field-body">Intelligent Contracts analyze submission quality, verify engagement, detect spam, and calculate rewards &mdash; all through multi-LLM consensus.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- MergeProof -->
+      <div class="app-card obs">
+        <div class="app-name">MergeProof</div>
+        <div class="app-domain">Software quality &amp; code review</div>
+        <div class="app-grid">
+          <div>
+            <div class="app-field-label amber">Where ambiguity exists</div>
+            <p class="app-field-body">Is this PR good enough? Is this bug report valid? AI agents are generating PRs at 10&ndash;100x human speed.</p>
+          </div>
+          <div>
+            <div class="app-field-label red">Why old systems fail</div>
+            <p class="app-field-body">Code review is unpaid labor. Review capacity doesn&rsquo;t scale. Quality is arbitrary and unaccountable.</p>
+          </div>
+          <div class="app-proves">
+            <div class="app-field-label teal">What GenLayer does</div>
+            <p class="app-field-body">Developers and agents stake money on code quality. Bug hunters earn proportional to severity. GenLayer evaluates quality through AI arbitration.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Constraint Repetition Visual -->
+    <div class="rule-label obs"><span>The Pattern</span></div>
+
+    <div class="constraint-visual obs">
+      <div class="cv-row">
+        <div class="cv-cell head">Application</div>
+        <div class="cv-cell head">Constraint</div>
+        <div class="cv-cell head">Resolution</div>
+      </div>
+      <div class="cv-row">
+        <div class="cv-cell name">Internet Court</div>
+        <div class="cv-cell">Judgment over general disputes</div>
+        <div class="cv-cell same">GenLayer</div>
+      </div>
+      <div class="cv-row">
+        <div class="cv-cell name">Rally</div>
+        <div class="cv-cell">Judgment over subjective fulfillment</div>
+        <div class="cv-cell same">GenLayer</div>
+      </div>
+      <div class="cv-row">
+        <div class="cv-cell name">MergeProof</div>
+        <div class="cv-cell">Judgment over code quality</div>
+        <div class="cv-cell same">GenLayer</div>
+      </div>
+      <div class="cv-conclusion">
+        Repetition is not coincidence. It is evidence of inevitability.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     §5 — THE DERIVATION
+     ═══════════════════════════════════════════════ -->
+<div class="section" id="derivation">
+  <p class="sec-label obs">&sect;5 &mdash; How We Got Here</p>
+  <h2 class="sec-title obs">GenLayer was not our first guess.<br><em>It was the conclusion.</em></h2>
+  <p class="sec-intro obs">
+    This is not a timeline of products. It is a timeline of constraint discovery.
+  </p>
+
+  <div class="timeline">
+    <div class="tl-item obs">
+      <div class="tl-dot"></div>
+      <div class="tl-phase">Phase 1 &middot; 2022</div>
+      <div class="tl-name">Agents can act</div>
+      <div class="tl-tag">yAgents &middot; Self-Reflection</div>
+      <p class="tl-desc">The first self-reflecting terminal agent. A system that observed its own execution, reasoned about it, and modified its behavior. The concept the industry now calls &ldquo;agentic coding&rdquo; did not yet have a name.</p>
+      <p class="tl-learned">We learned: <span>autonomous agency is achievable</span></p>
+    </div>
+    <div class="tl-item obs">
+      <div class="tl-dot"></div>
+      <div class="tl-phase">Phase 2 &middot; 2023</div>
+      <div class="tl-name">Agents can coordinate</div>
+      <div class="tl-tag">GenWorlds &middot; Multi-Agent Coordination</div>
+      <p class="tl-desc">Coordinated networks of LLM agents without a central planner. Shared world state, message-passing, emergent division of labour. The category was formalised by the field eighteen months later.</p>
+      <p class="tl-learned">We learned: <span>multi-agent coordination emerges from local interaction rules</span></p>
+    </div>
+    <div class="tl-item obs">
+      <div class="tl-dot"></div>
+      <div class="tl-phase">Phase 3 &middot; 2024&ndash;present</div>
+      <div class="tl-name">Coordination creates ambiguity</div>
+      <div class="tl-tag">GenLayer &middot; Flagship</div>
+      <p class="tl-desc">Programs that resolve ambiguous natural-language predicates via decentralised LLM consensus. Published with CRM (Centre de Recerca Matem&agrave;tica, UAB). Original research in probabilistic agreement theory.</p>
+      <p class="tl-learned">We discovered: <span>subjective resolution breaks &mdash; no existing system can handle it</span></p>
+    </div>
+    <div class="tl-item teal obs">
+      <div class="tl-dot"></div>
+      <div class="tl-phase">Phase 4 &middot; 2025&ndash;present</div>
+      <div class="tl-name">The constraint repeats</div>
+      <div class="tl-tag">Rally &middot; Internet Court</div>
+      <p class="tl-desc">The same judgment gap appearing independently in marketing fulfillment and agent-to-agent contracts. Not domain-specific &mdash; structural.</p>
+      <p class="tl-learned">We confirmed: <span>the constraint is structural, not domain-specific</span></p>
+    </div>
+    <div class="tl-item teal obs">
+      <div class="tl-dot"></div>
+      <div class="tl-phase">Phase 5 &middot; 2026&ndash;present</div>
+      <div class="tl-name">Agents at minimum complexity</div>
+      <div class="tl-tag">SubZeroClaw &middot; MergeProof</div>
+      <p class="tl-desc">A 54 KB agent runtime proving the Kolmogorov minimum for agentic systems. Staked code review where agents and humans compete in an economic market for software quality. The constraint scales down and scales out.</p>
+      <p class="tl-learned">We proved: <span>minimal agents still need judgment &mdash; new markets keep revealing the same gap</span></p>
+    </div>
+  </div>
+
+  <p class="sec-body obs" style="margin-top:2rem;">
+    Each phase did not replace the last. It extended the derivation. GenLayer is not where we started. It is where the evidence pointed.
+  </p>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     §6 — PUBLICATIONS (compressed, deprioritized)
+     ═══════════════════════════════════════════════ -->
+<div class="section" style="padding-top:3rem;">
+  <p class="sec-label obs">&sect;6 &mdash; Publications</p>
+  <p class="sec-intro obs" style="margin-bottom:0;">Mathematical foundations that are load-bearing, not decorative.</p>
+  <div class="pub-list">
+    <div class="pub-item obs">
+      <div class="pub-year">2025</div>
+      <div>
+        <div class="pub-venue">Target: SIAM Journal on Computing</div>
+        <div class="pub-title">Consensus over Ambiguous Specifications: A Formal Treatment</div>
+        <div class="pub-authors">J.M. Lago &amp; Llu&iacute;s Alsed&agrave; (CRM, UAB)</div>
+      </div>
+    </div>
+    <div class="pub-item obs">
+      <div class="pub-year">2025</div>
+      <div>
+        <div class="pub-venue">Target: IEEE CSF 2026</div>
+        <div class="pub-title">Greyboxing: Adversarial Robustness in Decentralised Validator Networks</div>
+        <div class="pub-authors">GenLayer Labs</div>
+      </div>
+    </div>
+    <div class="pub-item obs">
+      <div class="pub-year">2025</div>
+      <div>
+        <div class="pub-venue">Technical Report &middot; Released</div>
+        <div class="pub-title">SubZeroClaw: A 54 KB Proof of the Kolmogorov Minimum for Autonomous Agents</div>
+        <div class="pub-authors">GenLayer Labs</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     §7 — TEAM
+     ═══════════════════════════════════════════════ -->
+<div class="team-band" id="team">
+  <div class="team-inner">
+    <p class="sec-label obs">&sect;7 &mdash; The Team</p>
+    <h2 class="sec-title obs">Researchers, engineers,<br>and <em>builders.</em></h2>
+    <p class="sec-intro obs">
+      This team repeatedly identifies system-level constraints before the field names them.
+    </p>
+
+    <div class="founders-list obs">
+      <div class="founder-item">
+        <div class="founder-name">Jos&eacute; Mar&iacute;a Lago</div>
+        <div class="founder-role">CTO &amp; Co-Founder</div>
+      </div>
+      <div class="founder-item">
+        <div class="founder-name">Albert Castellana</div>
+        <div class="founder-role">CEO &amp; Co-Founder</div>
+      </div>
+      <div class="founder-item">
+        <div class="founder-name">Edgars Nem&scaron;e</div>
+        <div class="founder-role">CPO &amp; Co-Founder</div>
+      </div>
+    </div>
+
+    <div class="team-list obs">
+      <div class="team-list-item"><span class="tli-name">Navi Brar</span><span class="tli-role">Chief Operating Officer</span></div>
+      <div class="team-list-item"><span class="tli-name">Afsaneh Heyat</span><span class="tli-role">Head of Finance</span></div>
+      <div class="team-list-item"><span class="tli-name">Kiril Antevski</span><span class="tli-role">Senior Solidity Developer</span></div>
+      <div class="team-list-item"><span class="tli-name">Claudio Mello</span><span class="tli-role">Senior Solidity Developer</span></div>
+      <div class="team-list-item"><span class="tli-name">Kira Prokopenko</span><span class="tli-role">Compiler Engineer</span></div>
+      <div class="team-list-item"><span class="tli-name">Dari&eacute;n Hern&aacute;ndez Gonz&aacute;lez</span><span class="tli-role">Senior Blockchain Developer</span></div>
+      <div class="team-list-item"><span class="tli-name">Rafal Rabenda</span><span class="tli-role">DevOps Engineer</span></div>
+      <div class="team-list-item"><span class="tli-name">Daniel Juli&aacute;n Rojas Cruz</span><span class="tli-role">Senior Full Stack Developer</span></div>
+      <div class="team-list-item"><span class="tli-name">Araceli Garc&iacute;a</span><span class="tli-role">Operations &amp; Finance</span></div>
+      <div class="team-list-item"><span class="tli-name">Ana Mar&iacute;a Mahecha</span><span class="tli-role">Business Development</span></div>
+      <div class="team-list-item"><span class="tli-name">Luciano Pieroni</span><span class="tli-role">Head of Socials</span></div>
+      <div class="team-list-item"><span class="tli-name">Burak &lsquo;Rahil&rsquo; Ayd&inodot;n</span><span class="tli-role">Head of Growth</span></div>
+    </div>
+
+    <div class="alumni-strip obs">
+      <div class="alumni-label">Alumni of</div>
+      <div class="alumni-logos">
+        <img src="https://cdn.prod.website-files.com/6841451e44fce45f158da8f3/6841eecb12506d14d598a72f_ethfoundation.svg" alt="Ethereum Foundation">
+        <img src="https://cdn.prod.website-files.com/6841451e44fce45f158da8f3/6841eed3f24fc1f5d9208f80_jpmorgan.svg" alt="JPMorgan">
+        <img src="https://cdn.prod.website-files.com/6841451e44fce45f158da8f3/6841ee17d9aafe194e584489_paypal.svg" alt="PayPal">
+        <img src="https://cdn.prod.website-files.com/6841451e44fce45f158da8f3/6841ee0048ce1112fe2b3976_ey.svg" alt="EY">
+        <img src="https://cdn.prod.website-files.com/6841451e44fce45f158da8f3/6841ede43a5a5b35d2323c6d_teza.svg" alt="Teza">
+        <img src="https://cdn.prod.website-files.com/6841451e44fce45f158da8f3/6841ee942c7737003a99f4e1_quant.svg" alt="Quant">
+        <img src="https://cdn.prod.website-files.com/6841451e44fce45f158da8f3/6841eea63031b6952b677208_cisco.svg" alt="Cisco">
+        <img src="https://cdn.prod.website-files.com/6841451e44fce45f158da8f3/6841ef0e43db9fe5eac686ab_polygon.svg" alt="Polygon">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     §8 — CLOSE / CTA
+     ═══════════════════════════════════════════════ -->
+<div class="close-band">
+  <div class="close-inner obs">
+    <p class="sec-label">&sect;8</p>
+    <h2 class="close-title">
+      If agent commerce exists,<br>judgment infrastructure must exist.
+    </h2>
+    <p class="close-body">
+      The question is not whether autonomous agents will reshape global commerce. The question is where value concentrates when they do.
+    </p>
+    <p class="close-body">
+      It concentrates at the constraint. The constraint is judgment.
+    </p>
+    <p class="close-anchor">The infrastructure is GenLayer.</p>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">
+    <svg width="18" height="17"><use href="#gl-mark" fill="#8a6a2e"/></svg>
+    <span class="footer-wordmark">GENLAYER LABS</span>
+  </div>
+  <ul class="footer-links">
+    <li><a href="#genlayer">Protocol</a></li>
+    <li><a href="https://github.com/genlayerlabs" target="_blank" rel="noopener">GitHub</a></li>
+    <li><a href="https://genlayer.com" target="_blank" rel="noopener">genlayer.com</a></li>
+    <li><a href="https://discord.gg/genlayerlabs" target="_blank" rel="noopener">Discord</a></li>
+    <li><a href="https://x.com/GenLayer" target="_blank" rel="noopener">X</a></li>
+  </ul>
+  <div class="footer-copy">&copy; 2026 GenLayer Labs</div>
+</footer>
+
+</main>
+
+<!-- No-JS fallback -->
+<script>document.documentElement.classList.remove('no-js');</script>
+
+<!-- SCROLL REVEAL -->
+<script>
+(function() {
+  // Reveal elements already in viewport on load
+  var els = document.querySelectorAll('.obs');
+
+  if (!('IntersectionObserver' in window)) {
+    // Fallback: show everything immediately
+    els.forEach(function(el) { el.classList.add('visible'); });
+    return;
+  }
+
+  var io = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        io.unobserve(e.target); // stop watching once revealed
+      }
+    });
+  }, { threshold: 0.02, rootMargin: '0px 0px -40px 0px' });
+
+  els.forEach(function(el) { io.observe(el); });
+})();
+</script>
+
+</body>
+</html>
